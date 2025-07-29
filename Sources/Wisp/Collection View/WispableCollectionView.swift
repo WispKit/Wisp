@@ -13,7 +13,6 @@ public class WispableCollectionView: UICollectionView {
     
     private(set) var scrollDetected: PassthroughSubject<Void, Never> = .init()
     
-    
     // 여러 섹션을 이용하는 경우. (sectionProvider 사용)
     public init(
         frame: CGRect,

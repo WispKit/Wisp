@@ -20,7 +20,7 @@ public final class WispPresenter {
 
 public extension WispPresenter {
     
-    @MainActor public func present(
+    @MainActor func present(
         _ viewControllerToPresent: any WispDismissable,
         from indexPath: IndexPath,
         in presentingViewController: UIViewController,
@@ -31,16 +31,16 @@ public extension WispPresenter {
         selectedCell?.alpha = 0
         
         let wispContext = WispContext(
+            sourceViewController: presentingViewController,
             collectionView: collectionView,
             indexPath: indexPath,
             sourceCellSnapshot: cellSnapshot,
             presentedSnapshot: nil,
-            sourceViewController: presentingViewController,
             configuration: .default
         )
         let wispTransitioningDelegate = WispTransitioningDelegate(context: wispContext)
         
-        WispManager.shared.activeContext = wispContext
+        WispManager.shared.activeContext = consume wispContext
         viewControllerToPresent.modalPresentationStyle = .custom
         viewControllerToPresent.transitioningDelegate = wispTransitioningDelegate
         presentingViewController.present(viewControllerToPresent, animated: true)

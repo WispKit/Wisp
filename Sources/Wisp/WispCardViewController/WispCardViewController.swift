@@ -44,7 +44,6 @@ extension WispCardViewController {
         dragPanGesture.addTarget(self, action: #selector(dragPanGesturehandler))
         dragPanGesture.allowedScrollTypesMask = [.continuous]
         
-//        rootView.backgroundBlurView.addGestureRecognizer(tapGesture)
         rootView.card.addGestureRecognizer(dragPanGesture)
     }
     

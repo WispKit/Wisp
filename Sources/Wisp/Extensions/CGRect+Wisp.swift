@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension CGRect {
+internal extension CGRect {
     
     var center: CGPoint {
         get { return CGPoint(x: self.origin.x + self.width / 2, y: self.origin.y + self.height / 2) }

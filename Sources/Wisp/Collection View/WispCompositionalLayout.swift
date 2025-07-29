@@ -14,6 +14,7 @@ internal protocol CustomCompositionalLayoutDelegate: AnyObject {
 }
 
 
+// section 정보를 받아와서 스크롤을 추척 (delegate method 호출)
 internal class CustomCompositionalLayout: UICollectionViewCompositionalLayout {
 
     weak var delegate: (any CustomCompositionalLayoutDelegate)?

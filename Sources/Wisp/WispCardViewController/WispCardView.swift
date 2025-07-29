@@ -13,8 +13,6 @@ class WispCardView: UIView {
     private let cardInset: NSDirectionalEdgeInsets
     private let usingSafeArea: Bool
     
-//    let backgroundBlurView = CustomIntensityBlurView(blurStyle: .regular, intensity: 0.0)
-    
     let card = UIView()
     
     init(cardInset: NSDirectionalEdgeInsets, usingSafeArea: Bool) {
@@ -38,7 +36,6 @@ class WispCardView: UIView {
 extension WispCardView {
     
     func setupDesign() {
-//        backgroundBlurView.alpha = 1
         card.backgroundColor = UIColor.systemGray4
         card.layer.cornerRadius = 37
         card.layer.cornerCurve = .continuous
@@ -53,19 +50,10 @@ extension WispCardView {
 private extension WispCardView {
     
     func setupViewHierarchy() {
-//        addSubview(backgroundBlurView)
         addSubview(card)
     }
     
     func setupLayoutConstraints() {
-//        backgroundBlurView.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            backgroundBlurView.topAnchor.constraint(equalTo: topAnchor, constant: 0),
-//            backgroundBlurView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
-//            backgroundBlurView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
-//            backgroundBlurView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0),
-//        ])
-        
         card.translatesAutoresizingMaskIntoConstraints = false
         let cardEdgesConstraints: [NSLayoutConstraint]
         if usingSafeArea {
