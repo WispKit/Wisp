@@ -35,7 +35,7 @@ public extension WispPresenter {
             return
         }
         
-        /// modal presentation을 `dismiss`하고 난 직후 바로 다른 VC를 `present`하려고 할 때,
+        /// 바로 직전의 예외처리로 인한 modal presentation을 `dismiss`하고 난 직후 바로 다른 VC를 `present`하려고 할 때,
         /// `dismiss`가 완전히 끝나기 전인 경우,
         /// (`present`되는 시점에 `presentingViewController`의 `presentedViewController` 가 존재하면)
         /// 의도한 custom transition 대신 `.fullScreen` 방식으로 transition되는 문제 발생.

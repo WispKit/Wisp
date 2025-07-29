@@ -9,7 +9,20 @@ import UIKit
 
 internal class WispPresentationController: UIPresentationController {
     
-    private let tapRecognizingView = UIView()
+    private var willBeDismissedIfRelease: Bool = false {
+        didSet {
+            if willBeDismissedIfRelease != oldValue {
+                feedbackGenerator.impactOccurred()
+            }
+        }
+    }
+    private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+    private let blurAnimator = UIViewPropertyAnimator(
+        duration: 2,
+        controlPoint1: .init(x: 0, y: 0.3),
+        controlPoint2: .init(x: 0.65, y: 0.23)
+    )
+    private let tapRecognizingView = UIVisualEffectView(effect: nil)
     private let wispDismissableVC: any WispPresented
     
     private let tapGesture = UITapGestureRecognizer()
@@ -24,6 +37,8 @@ internal class WispPresentationController: UIPresentationController {
             presentedViewController: self.wispDismissableVC,
             presenting: presentingViewController
         )
+        self.blurAnimator.pausesOnCompletion = true
+        self.feedbackGenerator.prepare()
     }
     
     override func presentationTransitionWillBegin() {
@@ -44,11 +59,22 @@ internal class WispPresentationController: UIPresentationController {
         dragPanGesture.allowedScrollTypesMask = [.continuous]
         dragPanGesture.addTarget(self, action: #selector(dragPanGesturehandler))
         wispDismissableVC.view.addGestureRecognizer(dragPanGesture)
+        
+        blurAnimator.addAnimations { [weak self] in
+            self?.tapRecognizingView.effect = UIBlurEffect(style: .regular)
+        }
+        blurAnimator.startAnimation()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.blurAnimator.stopAnimation(true)
+        }
     }
     
     override func presentationTransitionDidEnd(_ completed: Bool) { }
     
-    override func dismissalTransitionWillBegin() { }
+    override func dismissalTransitionWillBegin() {
+        blurAnimator.stopAnimation(true)
+        blurAnimator.fractionComplete = 0
+    }
     
     override func dismissalTransitionDidEnd(_ completed: Bool) { }
     
@@ -58,6 +84,9 @@ internal class WispPresentationController: UIPresentationController {
 private extension WispPresentationController {
     
     @objc func containerBlurDidTapped(_ sender: UITapGestureRecognizer) {
+        blurAnimator.stopAnimation(true)
+        tapRecognizingView.effect = nil
+        
         wispDismissableVC.dismissCard()
     }
     
@@ -69,9 +98,11 @@ private extension WispPresentationController {
         let hypotenuse = sqrt(pow(translation.x, 2) + pow(translation.y,2))
         let scaleValue = 1.0 + 0.3 * (exp(-(abs(translation.x)/400.0 + translation.y/500.0)) - 1.0)
         let scale = min(1.05, max(0.7, scaleValue))
-        
         let yPosition = translation.y < 0 ? translation.y / 3 : translation.y
-        let translationTransform = CGAffineTransform(translationX: translation.x, y: yPosition)
+        let translationTransform = CGAffineTransform(
+            translationX: translation.x * pow(scale, 2) ,
+            y: yPosition * pow(scale, 2)
+        )
         let scaleTransform = CGAffineTransform(scaleX: scale, y: scale)
         
         switch gesture.state {
@@ -79,10 +110,12 @@ private extension WispPresentationController {
             break
         case .changed:
             view.transform = scaleTransform.concatenating(translationTransform)
+            willBeDismissedIfRelease = (hypotenuse > 230) && (translation.y > 0)
+            
         default:
             let velocity = gesture.velocity(in: view)
             let velocityScalar = sqrt(pow(velocity.x, 2) + pow(velocity.y, 2))
-            let shouldDismiss = (hypotenuse > 130 || velocityScalar > 1000) && (translation.y > 0)
+            let shouldDismiss = (hypotenuse > 230 || velocityScalar > 1000) && (translation.y > 0)
             
             if shouldDismiss {
                 (presentedViewController as! WispPresented).dismissCard()

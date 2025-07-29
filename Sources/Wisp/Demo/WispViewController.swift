@@ -11,7 +11,7 @@ public class WispViewController: UIViewController, WispPresented {
     
     public var presentedAreaInset: NSDirectionalEdgeInsets// = .init(top: 130, leading: 10, bottom: 130, trailing: 10)
     
-    let imageView = UIImageView(image: .init(systemName: "square"))
+    let imageView = UIImageView(image: .init(systemName: ["swift", "apple.logo"].randomElement()!))
     
     public init(viewInset: NSDirectionalEdgeInsets) {
         self.presentedAreaInset = viewInset
@@ -24,6 +24,7 @@ public class WispViewController: UIViewController, WispPresented {
             imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 1)
         ])
     }
     

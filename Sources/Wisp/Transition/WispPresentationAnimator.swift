@@ -23,7 +23,7 @@ internal final class WispPresentationAnimator: NSObject {
 extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
     
     func transitionDuration(using transitionContext: (any UIViewControllerContextTransitioning)?) -> TimeInterval {
-        return 0.5
+        return 0.6
     }
     
     func animateTransition(using transitionContext: any UIViewControllerContextTransitioning) {
