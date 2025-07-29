@@ -8,7 +8,7 @@
 import UIKit
 
 
-final class RestoringCard: UIView {
+internal final class RestoringCard: UIView {
     
     var cellSnapshot: UIView? = nil
     let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))

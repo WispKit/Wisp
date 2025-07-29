@@ -19,7 +19,7 @@ public extension UICollectionView {
         return collectionView
     }
     
-    // 단일 섹션 레이아웃만 지원
+    // 단일 섹션 레이아웃만 지원하는 경우
     static func makeWispable(
         frame: CGRect = .zero,
         section: NSCollectionLayoutSection,
@@ -27,16 +27,6 @@ public extension UICollectionView {
         let customLayout = CustomCompositionalLayout(section: section)
         let collectionView = UICollectionView(frame: frame, collectionViewLayout: customLayout)
         return collectionView
-    }
-    
-}
-
-
-
-public extension WispableCollectionView {
-    
-    var wisp: WispPresenter {
-        return WispPresenter(collectionView: self)
     }
     
 }

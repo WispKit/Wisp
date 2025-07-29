@@ -11,10 +11,14 @@ import UIKit
 public final class WispPresenter {
     
     private weak var collectionView: WispableCollectionView?
-
-    init(collectionView: WispableCollectionView) {
+    
+    internal init(collectionView: WispableCollectionView) {
         self.collectionView = collectionView
     }
+    
+}
+
+public extension WispPresenter {
     
     @MainActor public func present(
         _ viewControllerToPresent: any WispDismissable,

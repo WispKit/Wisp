@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct WispContext {
+internal struct WispContext {
     weak var collectionView: WispableCollectionView?
     let indexPath: IndexPath
     let sourceCellSnapshot: UIView?

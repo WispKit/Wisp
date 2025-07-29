@@ -14,7 +14,7 @@ internal protocol CustomCompositionalLayoutDelegate: AnyObject {
 }
 
 
-public class CustomCompositionalLayout: UICollectionViewCompositionalLayout {
+internal class CustomCompositionalLayout: UICollectionViewCompositionalLayout {
 
     weak var delegate: (any CustomCompositionalLayoutDelegate)?
     

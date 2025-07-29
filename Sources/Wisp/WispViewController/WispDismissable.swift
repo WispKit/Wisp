@@ -18,7 +18,7 @@ import UIKit
 
 
 
-extension WispDismissable {
+internal extension WispDismissable {
     
     public func dismissCard() {
         let screenCornerRadius = UIDevice.current.userInterfaceIdiom == .pad ? 32.0 : 37.0
@@ -33,6 +33,11 @@ extension WispDismissable {
         view.alpha = 0
         view.isHidden = true
     }
+    
+}
+
+
+internal extension WispDismissable {
     
     func setViewShowingInitialState(startFrame: CGRect) {
         let cardFinalFrame = view.frame

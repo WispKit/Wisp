@@ -7,7 +7,7 @@
 
 import Foundation
 
-class CardStackManager {
+internal class CardStackManager {
     private var stack: [RestoringCard] = []
     
     func push(_ context: RestoringCard) {
