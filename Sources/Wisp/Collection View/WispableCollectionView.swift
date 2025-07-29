@@ -79,12 +79,3 @@ extension WispableCollectionView: CustomCompositionalLayoutDelegate {
     }
     
 }
-
-
-public extension WispableCollectionView {
-    
-    var wisp: WispPresenter {
-        return WispPresenter(collectionView: self)
-    }
-    
-}

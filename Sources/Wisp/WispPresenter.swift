@@ -10,10 +10,10 @@ import UIKit
 
 public final class WispPresenter {
     
-    private weak var collectionView: WispableCollectionView?
+    private weak var presentingViewController: UIViewController?
     
-    internal init(collectionView: WispableCollectionView) {
-        self.collectionView = collectionView
+    internal init(presentingVC: UIViewController) {
+        self.presentingViewController = presentingVC
     }
     
 }
@@ -21,12 +21,12 @@ public final class WispPresenter {
 public extension WispPresenter {
     
     @MainActor func present(
-        _ viewControllerToPresent: any WispDismissable,
-        from indexPath: IndexPath,
-        in presentingViewController: UIViewController,
+        _ viewControllerToPresent: some WispDismissable,
+        collectionView: WispableCollectionView,
+        at indexPath: IndexPath,
         configuration: WispConfiguration = .default
     ) {
-        let selectedCell = collectionView?.cellForItem(at: indexPath)
+        let selectedCell = collectionView.cellForItem(at: indexPath)
         let cellSnapshot = selectedCell?.snapshotView(afterScreenUpdates: false)
         selectedCell?.alpha = 0
         
@@ -40,10 +40,10 @@ public extension WispPresenter {
         )
         let wispTransitioningDelegate = WispTransitioningDelegate(context: wispContext)
         
-        WispManager.shared.activeContext = consume wispContext
+        WispManager.shared.activeContext = wispContext
         viewControllerToPresent.modalPresentationStyle = .custom
         viewControllerToPresent.transitioningDelegate = wispTransitioningDelegate
-        presentingViewController.present(viewControllerToPresent, animated: true)
+        presentingViewController?.present(viewControllerToPresent, animated: true)
     }
     
 }

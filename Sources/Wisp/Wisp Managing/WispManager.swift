@@ -27,7 +27,7 @@ import Combine
         guard let context = activeContext else { return }
         // 컬렉션뷰 구독 초기화
         cancellables = []
-        restore(startFrame: startFrame, using: context)
+        restore(startFrame: startFrame, using: consume context)
         activeContext = nil
     }
     
