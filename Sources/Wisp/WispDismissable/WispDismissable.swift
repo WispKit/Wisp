@@ -17,10 +17,9 @@ import UIKit
 }
 
 
-
-internal extension WispDismissable {
+public extension WispDismissable {
     
-    public func dismissCard() {
+    func dismissCard() {
         let screenCornerRadius = UIDevice.current.userInterfaceIdiom == .pad ? 32.0 : 37.0
         view.layer.cornerRadius = screenCornerRadius
         view.layer.cornerCurve = .continuous

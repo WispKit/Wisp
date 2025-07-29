@@ -7,6 +7,7 @@
 
 import UIKit
 
+// MARK: - Deprecated
 
 class WispCardView: UIView {
     

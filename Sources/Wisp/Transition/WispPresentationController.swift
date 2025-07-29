@@ -10,20 +10,18 @@ import UIKit
 internal class WispPresentationController: UIPresentationController {
     
     private let tapRecognizingView = UIView()
-    private let wispDismissableViewController: any WispDismissable
+    private let wispDismissableVC: any WispDismissable
     
     private let tapGesture = UITapGestureRecognizer()
     private let dragPanGesture = UIPanGestureRecognizer()
-    
-    
     
     init(
         presentedViewController: any WispDismissable,
         presenting presentingViewController: UIViewController?
     ) {
-        self.wispDismissableViewController = presentedViewController
+        self.wispDismissableVC = presentedViewController
         super.init(
-            presentedViewController: self.wispDismissableViewController,
+            presentedViewController: self.wispDismissableVC,
             presenting: presentingViewController
         )
     }
@@ -33,9 +31,7 @@ internal class WispPresentationController: UIPresentationController {
     }
     
     override func presentationTransitionWillBegin() {
-        
         guard let containerView else { return }
-        
         containerView.addSubview(tapRecognizingView)
         tapRecognizingView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -51,7 +47,7 @@ internal class WispPresentationController: UIPresentationController {
         
         dragPanGesture.allowedScrollTypesMask = [.continuous]
         dragPanGesture.addTarget(self, action: #selector(dragPanGesturehandler))
-        wispDismissableViewController.view.addGestureRecognizer(dragPanGesture)
+        wispDismissableVC.view.addGestureRecognizer(dragPanGesture)
     }
     
     override func presentationTransitionDidEnd(_ completed: Bool) { }
@@ -62,12 +58,17 @@ internal class WispPresentationController: UIPresentationController {
         print(#function)
     }
     
-    @objc private func containerBlurDidTapped(_ sender: UITapGestureRecognizer) {
-        wispDismissableViewController.dismissCard()
+}
+
+
+private extension WispPresentationController {
+    
+    @objc func containerBlurDidTapped(_ sender: UITapGestureRecognizer) {
+        wispDismissableVC.dismissCard()
     }
     
-    @objc private func dragPanGesturehandler(_ gesture: UIPanGestureRecognizer) {
-        let view = wispDismissableViewController.view!
+    @objc func dragPanGesturehandler(_ gesture: UIPanGestureRecognizer) {
+        let view = wispDismissableVC.view!
         // 직전 제스처의 위치로부터 이동 거리(매 change state 호출 시마다 위치 재정렬함.)
         let translation = gesture.translation(in: view)
         /// pan gesture의 시작점으로부터의 거리.

@@ -7,6 +7,8 @@
 
 import UIKit
 
+// MARK: - Deprecated
+
 class WispCardViewController: UIViewController {
     
     let rootView: WispCardView

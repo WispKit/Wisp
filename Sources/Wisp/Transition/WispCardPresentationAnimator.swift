@@ -7,6 +7,7 @@
 
 import UIKit
 
+// MARK: - Deprecated
 
 internal final class WispCardPresentationAnimator: NSObject {
     
@@ -41,7 +42,6 @@ extension WispCardPresentationAnimator: UIViewControllerAnimatedTransitioning {
         ])
         containerView.layoutIfNeeded()
         cardVC.rootView.setCardShowingInitialState(startFrame: startFrame)
-//        cardVC.rootView.backgroundBlurView.setBlurFromZero(intensity: 0.1, animated: true)
         
         let homeViewBackgroundColor = UIColor { traitCollection in
             if traitCollection.userInterfaceStyle == .light {
