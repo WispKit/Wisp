@@ -1,5 +1,5 @@
 //
-//  WispDismissable.swift
+//  WispPresented.swift
 //  NoteCard
 //
 //  Created by 김민성 on 7/28/25.
@@ -8,16 +8,16 @@
 import UIKit
 
 
-@MainActor public protocol WispDismissable: UIViewController {
+@MainActor public protocol WispPresented: UIViewController {
     
-    var viewInset: NSDirectionalEdgeInsets { get }
+    var presentedAreaInset: NSDirectionalEdgeInsets { get }
     
     func dismissCard()
     
 }
 
 
-public extension WispDismissable {
+public extension WispPresented {
     
     func dismissCard() {
         let screenCornerRadius = UIDevice.current.userInterfaceIdiom == .pad ? 32.0 : 37.0
@@ -36,7 +36,7 @@ public extension WispDismissable {
 }
 
 
-internal extension WispDismissable {
+internal extension WispPresented {
     
     func setViewShowingInitialState(startFrame: CGRect) {
         let cardFinalFrame = view.frame

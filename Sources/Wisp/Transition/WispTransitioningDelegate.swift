@@ -31,7 +31,7 @@ internal final class WispTransitioningDelegate: NSObject, UIViewControllerTransi
         presenting: UIViewController?,
         source: UIViewController
     ) -> UIPresentationController? {
-        guard let wispDismissableVC = presented as? WispDismissable else {
+        guard let wispDismissableVC = presented as? WispPresented else {
             fatalError()
         }
         return WispPresentationController(

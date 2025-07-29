@@ -10,13 +10,13 @@ import UIKit
 internal class WispPresentationController: UIPresentationController {
     
     private let tapRecognizingView = UIView()
-    private let wispDismissableVC: any WispDismissable
+    private let wispDismissableVC: any WispPresented
     
     private let tapGesture = UITapGestureRecognizer()
     private let dragPanGesture = UIPanGestureRecognizer()
     
     init(
-        presentedViewController: any WispDismissable,
+        presentedViewController: any WispPresented,
         presenting presentingViewController: UIViewController?
     ) {
         self.wispDismissableVC = presentedViewController
@@ -85,7 +85,7 @@ private extension WispPresentationController {
             let shouldDismiss = (hypotenuse > 130 || velocityScalar > 1000) && (translation.y > 0)
             
             if shouldDismiss {
-                (presentedViewController as! WispDismissable).dismissCard()
+                (presentedViewController as! WispPresented).dismissCard()
             } else {
                 UIView.springAnimate(withDuration: 0.5, options: .allowUserInteraction) {
                     view.transform = .identity

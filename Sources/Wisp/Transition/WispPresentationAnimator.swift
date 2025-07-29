@@ -28,7 +28,7 @@ extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
     
     func animateTransition(using transitionContext: any UIViewControllerContextTransitioning) {
         let containerView = transitionContext.containerView
-        let wispVC = transitionContext.viewController(forKey: .to) as! WispDismissable
+        let wispVC = transitionContext.viewController(forKey: .to) as! WispPresented
         let wispView = wispVC.view!
         containerView.addSubview(wispView)
         
@@ -45,10 +45,10 @@ extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
             options: .allowUserInteraction,
             animations: {
                 NSLayoutConstraint.activate([
-                    wispView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: wispVC.viewInset.top),
-                    wispView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: wispVC.viewInset.leading),
-                    wispView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -wispVC.viewInset.trailing),
-                    wispView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -wispVC.viewInset.bottom),
+                    wispView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: wispVC.presentedAreaInset.top),
+                    wispView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: wispVC.presentedAreaInset.leading),
+                    wispView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -wispVC.presentedAreaInset.trailing),
+                    wispView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -wispVC.presentedAreaInset.bottom),
                 ])
                 wispVC.setViewShowingFinalState()
                 containerView.layoutIfNeeded()

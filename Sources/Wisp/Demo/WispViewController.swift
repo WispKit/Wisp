@@ -7,14 +7,14 @@
 
 import UIKit
 
-public class WispViewController: UIViewController, WispDismissable {
+public class WispViewController: UIViewController, WispPresented {
     
-    public var viewInset: NSDirectionalEdgeInsets// = .init(top: 130, leading: 10, bottom: 130, trailing: 10)
+    public var presentedAreaInset: NSDirectionalEdgeInsets// = .init(top: 130, leading: 10, bottom: 130, trailing: 10)
     
     let imageView = UIImageView(image: .init(systemName: "square"))
     
     public init(viewInset: NSDirectionalEdgeInsets) {
-        self.viewInset = viewInset
+        self.presentedAreaInset = viewInset
         super.init(nibName: nil, bundle: nil)
         
         imageView.contentMode = .scaleAspectFit
