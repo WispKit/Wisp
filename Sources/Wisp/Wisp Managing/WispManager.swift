@@ -55,7 +55,6 @@ private extension WispManager {
         _ card: RestoringCard,
         context: WispContext
     ) {
-        print(#function)
         guard let restoringCell = context.collectionView?.cellForItem(at: context.indexPath) else {
             return
         }

@@ -34,7 +34,14 @@ public extension WispPresenter {
             presentingViewController.present(viewControllerToPresent, animated: true)
             return
         }
-        print("presentedViewController: ", presentingViewController.presentedViewController)
+        
+        /// modal presentation을 `dismiss`하고 난 직후 바로 다른 VC를 `present`하려고 할 때,
+        /// `dismiss`가 완전히 끝나기 전인 경우,
+        /// (`present`되는 시점에 `presentingViewController`의 `presentedViewController` 가 존재하면)
+        /// 의도한 custom transition 대신 `.fullScreen` 방식으로 transition되는 문제 발생.
+        /// 시스템이 자동으로 fullscreen transition을 채택하는 것 같다.
+        guard presentingViewController.presentedViewController == nil else { return }
+        
         let selectedCell = collectionView.cellForItem(at: indexPath)
         let cellSnapshot = selectedCell?.snapshotView(afterScreenUpdates: false)
         selectedCell?.alpha = 0

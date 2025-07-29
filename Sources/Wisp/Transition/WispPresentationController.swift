@@ -26,10 +26,6 @@ internal class WispPresentationController: UIPresentationController {
         )
     }
     
-    deinit {
-        print("presentation controller deinit")
-    }
-    
     override func presentationTransitionWillBegin() {
         guard let containerView else { return }
         containerView.addSubview(tapRecognizingView)
@@ -54,9 +50,7 @@ internal class WispPresentationController: UIPresentationController {
     
     override func dismissalTransitionWillBegin() { }
     
-    override func dismissalTransitionDidEnd(_ completed: Bool) {
-        print(#function)
-    }
+    override func dismissalTransitionDidEnd(_ completed: Bool) { }
     
 }
 
