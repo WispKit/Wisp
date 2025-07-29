@@ -26,6 +26,15 @@ public extension WispPresenter {
         at indexPath: IndexPath,
         configuration: WispConfiguration = .default
     ) {
+        guard let presentingViewController else { return }
+        guard presentingViewController.view.containsAsSubview(collectionView) else {
+            print("Collection view is not subview of presenting view controller's view.")
+            print("Custom transition will be cancelled and run modal presentation.")
+            viewControllerToPresent.modalPresentationStyle = .formSheet
+            presentingViewController.present(viewControllerToPresent, animated: true)
+            return
+        }
+        print("presentedViewController: ", presentingViewController.presentedViewController)
         let selectedCell = collectionView.cellForItem(at: indexPath)
         let cellSnapshot = selectedCell?.snapshotView(afterScreenUpdates: false)
         selectedCell?.alpha = 0
@@ -43,7 +52,7 @@ public extension WispPresenter {
         WispManager.shared.activeContext = wispContext
         viewControllerToPresent.modalPresentationStyle = .custom
         viewControllerToPresent.transitioningDelegate = wispTransitioningDelegate
-        presentingViewController?.present(viewControllerToPresent, animated: true)
+        presentingViewController.present(viewControllerToPresent, animated: true)
     }
     
 }

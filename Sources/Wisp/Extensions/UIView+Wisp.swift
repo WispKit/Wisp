@@ -49,4 +49,18 @@ internal extension UIView {
         return imageView
     }
     
+    func containsAsSubview(_ view: UIView) -> Bool {
+        if subviews.contains(view) {
+            return true
+        }
+        for subview in subviews {
+            if subview.containsAsSubview(view) {
+                return true
+            } else {
+                continue
+            }
+        }
+        return false
+    }
+    
 }
