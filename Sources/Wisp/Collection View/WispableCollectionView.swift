@@ -14,16 +14,38 @@ public class WispableCollectionView: UICollectionView {
     private(set) var scrollDetected: PassthroughSubject<Void, Never> = .init()
     
     
-    // 여러 섹션을 이용하는 경우. sectionProvider 사용
-    public init(frame: CGRect, sectionProvider: @escaping UICollectionViewCompositionalLayoutSectionProvider) {
-        let customLayout = CustomCompositionalLayout(sectionProvider: sectionProvider)
+    // 여러 섹션을 이용하는 경우. (sectionProvider 사용)
+    public init(
+        frame: CGRect,
+        sectionProvider: @escaping UICollectionViewCompositionalLayoutSectionProvider,
+        configuration: UICollectionViewCompositionalLayoutConfiguration? = nil
+    ) {
+        let customLayout: CustomCompositionalLayout
+        if let configuration {
+            customLayout = CustomCompositionalLayout(
+                sectionProvider: sectionProvider,
+                configuration: configuration
+            )
+        } else {
+            customLayout = CustomCompositionalLayout(sectionProvider: sectionProvider)
+        }
         super.init(frame: frame, collectionViewLayout: customLayout)
         customLayout.delegate = self
     }
     
+    
     // 단일 섹션을 이용하는 경우.
-    public init(frame: CGRect, section: NSCollectionLayoutSection) {
-        let customLayout = CustomCompositionalLayout(section: section)
+    public init(
+        frame: CGRect,
+        section: NSCollectionLayoutSection,
+        configuration: UICollectionViewCompositionalLayoutConfiguration? = nil
+    ) {
+        let customLayout: CustomCompositionalLayout
+        if let configuration {
+            customLayout = CustomCompositionalLayout(section: section, configuration: configuration)
+        } else {
+            customLayout = CustomCompositionalLayout(section: section)
+        }
         super.init(frame: frame, collectionViewLayout: customLayout)
         customLayout.delegate = self
     }
@@ -31,6 +53,9 @@ public class WispableCollectionView: UICollectionView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    // list configuration
+    
     
 }
 
