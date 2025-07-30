@@ -24,9 +24,28 @@ public extension WispPresented {
         view.layer.cornerRadius = screenCornerRadius
         view.layer.cornerCurve = .continuous
         
-        WispManager.shared.activeContext?.presentedSnapshot = view.snapshotView(
-            afterScreenUpdates: false
-        )
+        // 배경 블러 없애기
+        guard let presentationController = presentationController as? WispPresentationController else {
+            return
+        }
+        presentationController.tapRecognizingBlurView.effect = nil
+        
+        if isBeingPresented {
+            guard
+                let wispTransitioningDelegate = transitioningDelegate as? WispTransitioningDelegate
+            else {
+                dismiss(animated: true)
+                return
+            }
+            wispTransitioningDelegate.presentingAnimator.stopAnimation(false)
+            wispTransitioningDelegate.presentingAnimator.finishAnimation(at: .current)
+        }
+        startCardDismissing()
+    }
+    
+    private func startCardDismissing() {
+        let snapshot = view.snapshotView(afterScreenUpdates: true)
+        WispManager.shared.activeContext?.presentedSnapshot = snapshot
         WispManager.shared.handleInteractiveDismissEnded(startFrame: view.frame)
         dismiss(animated: false)
         view.alpha = 0

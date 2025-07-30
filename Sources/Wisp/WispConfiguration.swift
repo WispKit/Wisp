@@ -9,11 +9,43 @@ import UIKit
 
 
 public struct WispConfiguration {
-    let animationDuration: TimeInterval
-    let cornerRadius: CGFloat
-
+    
+    public enum AnimationSpeed: Double {
+        case slow = 0.8
+        case normal = 0.6
+        case fast = 0.4
+    }
+    
     public static let `default` = WispConfiguration(
-        animationDuration: 0.5,
-        cornerRadius: 12
+        animationSpeed: .normal,
+        initialCornerRadius: 20,
+        finalCornerRadius: 37
     )
+    
+    let animationSpeed: AnimationSpeed
+    let initialCornerRadius: CGFloat
+    let finalCornerRadius: CGFloat
+    let initialMaskedCorner: CACornerMask
+    let finalMaskedCorner: CACornerMask
+    
+    public init(
+        animationSpeed: AnimationSpeed = .normal,
+        initialCornerRadius: CGFloat = 0,
+        finalCornerRadius: CGFloat = 0,
+        initialMaskedCorner: CACornerMask = [.layerMaxXMaxYCorner,
+                                            .layerMaxXMinYCorner,
+                                            .layerMinXMaxYCorner,
+                                            .layerMinXMinYCorner],
+        finalMaskedCorner: CACornerMask = [.layerMaxXMaxYCorner,
+                                           .layerMaxXMinYCorner,
+                                           .layerMinXMaxYCorner,
+                                           .layerMinXMinYCorner]
+    ) {
+        self.animationSpeed = animationSpeed
+        self.initialCornerRadius = initialCornerRadius
+        self.finalCornerRadius = finalCornerRadius
+        self.initialMaskedCorner = initialMaskedCorner
+        self.finalMaskedCorner = finalMaskedCorner
+    }
+    
 }

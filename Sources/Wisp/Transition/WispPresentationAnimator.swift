@@ -10,12 +10,17 @@ import UIKit
 
 internal final class WispPresentationAnimator: NSObject {
     
-    var startFrame: CGRect
-    let interactor: UIPercentDrivenInteractiveTransition
+    let animator: UIViewPropertyAnimator
     
-    init(startFrame: CGRect, interactor: UIPercentDrivenInteractiveTransition) {
+    private let configuration: WispConfiguration
+    private var startFrame: CGRect
+    private let interactor: UIPercentDrivenInteractiveTransition
+    
+    init(animator: UIViewPropertyAnimator, startFrame: CGRect, interactor: UIPercentDrivenInteractiveTransition, configuration: WispConfiguration) {
+        self.animator = animator
         self.startFrame = startFrame
         self.interactor = interactor
+        self.configuration = configuration
     }
     
 }
@@ -23,7 +28,7 @@ internal final class WispPresentationAnimator: NSObject {
 extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
     
     func transitionDuration(using transitionContext: (any UIViewControllerContextTransitioning)?) -> TimeInterval {
-        return 0.6
+        return configuration.animationSpeed.rawValue
     }
     
     func animateTransition(using transitionContext: any UIViewControllerContextTransitioning) {
@@ -32,31 +37,35 @@ extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
         let wispView = wispVC.view!
         containerView.addSubview(wispView)
         
-        wispVC.setViewShowingInitialState(startFrame: startFrame)
+        wispVC.view.frame = startFrame
+        wispVC.view.layer.cornerRadius = configuration.initialCornerRadius
         containerView.layoutIfNeeded()
-        wispView.layoutIfNeeded()
-        /// - Important: 반드시 setViewShowingInitialState 메서드 뒤에 호출되어야 함.
+        /// - Important: 반드시 wispVC.view의 레이아웃을 설정한 뒤에 호출되어야 함.
         wispView.translatesAutoresizingMaskIntoConstraints = false
         
-        /// - Important: Interactivce한 트랜지션을 위해서는 UIView.animate를 사용해야 함.
-        /// UIViewPropertyAnimator를 사용하면 interactive한 애니메이션이 제대로 동작하지 않음 주의.
-        UIView.springAnimate(
-            withDuration: transitionDuration(using: transitionContext),
-            options: .allowUserInteraction,
-            animations: {
-                NSLayoutConstraint.activate([
-                    wispView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: wispVC.presentedAreaInset.top),
-                    wispView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: wispVC.presentedAreaInset.leading),
-                    wispView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -wispVC.presentedAreaInset.trailing),
-                    wispView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -wispVC.presentedAreaInset.bottom),
-                ])
-                wispVC.setViewShowingFinalState()
-                containerView.layoutIfNeeded()
-            },
-            completion: { _ in
-                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-            }
-        )
+        animator.addAnimations { [weak self] in
+            guard let self else { return }
+            NSLayoutConstraint.activate([
+                wispView.topAnchor.constraint(equalTo: containerView.topAnchor,
+                                              constant: wispVC.presentedAreaInset.top),
+                wispView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor,
+                                                  constant: wispVC.presentedAreaInset.leading),
+                wispView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor,
+                                                   constant: -wispVC.presentedAreaInset.trailing),
+                wispView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor,
+                                                 constant: -wispVC.presentedAreaInset.bottom),
+            ])
+            wispVC.view.layer.cornerRadius = self.configuration.finalCornerRadius
+            wispVC.view.layer.maskedCorners = self.configuration.finalMaskedCorner
+            wispVC.view.layer.cornerCurve = .continuous
+            containerView.layoutIfNeeded()
+        }
+        
+        animator.addCompletion { _ in
+            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+        }
+        
+        animator.startAnimation()
         
         // interactivce한 transition이나, 사용자와 지속적으로 상호작용하면서 present하지는 않는다.
         // 단지 뷰가 자동으로 펼쳐지는데, 펼쳐지는 중간에 사용자가 이 뷰를 잡을 수 있는 것.

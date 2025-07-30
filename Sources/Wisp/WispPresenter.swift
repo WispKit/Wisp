@@ -52,11 +52,15 @@ public extension WispPresenter {
             indexPath: indexPath,
             sourceCellSnapshot: cellSnapshot,
             presentedSnapshot: nil,
-            configuration: .default
+            configuration: configuration
         )
-        let wispTransitioningDelegate = WispTransitioningDelegate(context: wispContext)
+        
+        let wispTransitioningDelegate = WispTransitioningDelegate(
+            context: wispContext,
+        )
         
         WispManager.shared.activeContext = wispContext
+        WispManager.shared.transitioningDelegate = wispTransitioningDelegate
         viewControllerToPresent.modalPresentationStyle = .custom
         viewControllerToPresent.transitioningDelegate = wispTransitioningDelegate
         presentingViewController.present(viewControllerToPresent, animated: true)

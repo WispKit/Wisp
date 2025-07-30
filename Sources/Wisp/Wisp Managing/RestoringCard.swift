@@ -35,7 +35,6 @@ internal final class RestoringCard: UIView {
             blurView.trailingAnchor.constraint(equalTo: trailingAnchor),
             blurView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
-        
     }
     
 }
@@ -63,6 +62,7 @@ extension RestoringCard {
     
     func addViewSnapshot(_ snapshot: UIView) {
         viewSnapshot = snapshot
+//        viewSnapshot?.backgroundColor = .orange
         addSubview(viewSnapshot!)
     }
     

@@ -12,16 +12,17 @@ import Combine
 @MainActor final internal class WispManager {
     
     static let shared = WispManager()
-    
-    let cardRestoringSizeAnimator = UIViewPropertyAnimator(duration: 0.7, dampingRatio: 1)
-    let cardRestoringMovingAnimator = UIViewPropertyAnimator(duration: 0.6, dampingRatio: 0.8)
-    
     private init() {}
+    
+    private let cardRestoringSizeAnimator = UIViewPropertyAnimator(duration: 0.7, dampingRatio: 1)
+    private let cardRestoringMovingAnimator = UIViewPropertyAnimator(duration: 0.6, dampingRatio: 0.8)
     
     private let cardStackManager = CardStackManager()
     private let restoringCard = RestoringCard()
     private var cancellables: Set<AnyCancellable> = []
     internal var activeContext: WispContext?
+    
+    var transitioningDelegate: WispTransitioningDelegate? = nil
     
     func handleInteractiveDismissEnded(startFrame: CGRect) {
         guard let context = activeContext else { return }
@@ -47,7 +48,7 @@ private extension WispManager {
     func getScaleT(startFrame: CGRect, endFrame: CGRect) -> CGAffineTransform {
         return.init(
             scaleX: startFrame.width / endFrame.width,
-            y: startFrame.height / endFrame.height
+            y: startFrame.height / endFrame.height,
         )
     }
     
@@ -115,7 +116,9 @@ private extension WispManager {
         restoringCard.clipsToBounds = true
         
         // restoring card 초기 디자인 설정 - 커스텀, WispConfiguration 활용하는 방향으로 구현
-        restoringCard.layer.cornerRadius = 20
+        let cornerRadiusProportion = max(startFrame.width / convertedCellFrame.width,
+                                         startFrame.height / convertedCellFrame.height)
+        restoringCard.layer.cornerRadius = context.configuration.finalCornerRadius / cornerRadiusProportion
         
         // restoring card snapshot 설정
         restoringCard.setupSnapshots(
@@ -137,6 +140,8 @@ private extension WispManager {
         cardRestoringSizeAnimator.addAnimations {[weak self] in
             self?.restoringCard.switchSnapshots()
             self?.restoringCard.transform = .identity
+            self?.restoringCard.layer.cornerRadius = context.configuration.initialCornerRadius
+            self?.restoringCard.layer.maskedCorners = context.configuration.initialMaskedCorner
             currentWindow.layoutIfNeeded()
         }
         

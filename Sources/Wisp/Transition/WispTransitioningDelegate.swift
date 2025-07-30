@@ -11,11 +11,17 @@ import UIKit
 
 internal final class WispTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
     
+    private(set) lazy var presentingAnimator = UIViewPropertyAnimator(
+        duration: context.configuration.animationSpeed.rawValue,
+        dampingRatio: 1
+    )
+    private let context: WispContext
     private let presentationInteractor = UIPercentDrivenInteractiveTransition()
     private let startCellFrame: CGRect
     private var cancellables: Set<AnyCancellable> = []
     
     init(context: WispContext) {
+        self.context = context
         // 시작할 때 셀 frame
         guard let selectedCell = context.collectionView?.cellForItem(at: context.indexPath) else {
             fatalError()
@@ -46,7 +52,12 @@ internal final class WispTransitioningDelegate: NSObject, UIViewControllerTransi
         presenting: UIViewController,
         source: UIViewController
     ) -> (any UIViewControllerAnimatedTransitioning)? {
-        return WispPresentationAnimator(startFrame: startCellFrame, interactor: presentationInteractor)
+        return WispPresentationAnimator(
+            animator: presentingAnimator,
+            startFrame: startCellFrame,
+            interactor: presentationInteractor,
+            configuration: context.configuration
+        )
     }
     
     // MARK: - Presentation Animator (Interaction)
