@@ -26,7 +26,7 @@ internal class WispPresentationController: UIPresentationController {
     private let wispDismissableVC: any WispPresented
     
     private let tapGesture = UITapGestureRecognizer()
-    private let dragPanGesture = UIPanGestureRecognizer()
+    let dragPanGesture = UIPanGestureRecognizer()
     
     init(
         presentedViewController: any WispPresented,
@@ -39,6 +39,8 @@ internal class WispPresentationController: UIPresentationController {
         )
         self.blurAnimator.pausesOnCompletion = true
         self.feedbackGenerator.prepare()
+        
+        dragPanGesture.delegate = self
     }
     
     override func presentationTransitionWillBegin() {
@@ -117,7 +119,7 @@ private extension WispPresentationController {
             let shouldDismiss = (hypotenuse > 230 || velocityScalar > 1000) && (translation.y > 0)
             
             if shouldDismiss {
-                (presentedViewController as! WispPresented).dismissCard()
+                wispDismissableVC.dismissCard()
             } else {
                 UIView.springAnimate(withDuration: 0.5, options: .allowUserInteraction) {
                     view.transform = .identity
@@ -126,6 +128,56 @@ private extension WispPresentationController {
                 }
             }
         }
+    }
+    
+    private func findScrollView(in view: UIView) -> UIScrollView? {
+        if let scrollView = view as? UIScrollView {
+            return scrollView
+        }
+        for subview in view.subviews {
+            if let scroll = findScrollView(in: subview) {
+                return scroll
+            }
+        }
+        return nil
+    }
+    
+}
+
+
+extension WispPresentationController: UIGestureRecognizerDelegate {
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        print(#function)
+        let view = wispDismissableVC.view!
+        guard let scrollView = findScrollView(in: view) else { return true }
+        
+        let velocity = (gestureRecognizer as? UIPanGestureRecognizer)?.velocity(in: view) ?? .zero
+        
+        // 아래로 끌기 + 스크롤뷰가 최상단이면 → dismiss 허용
+        
+        let isPanningDown = velocity.y > abs(velocity.x)
+        let isPanningUp = -velocity.y > abs(velocity.x)
+        let isScrollViewTopEdge = scrollView.contentOffset.y <= 0
+        let isPanningHorizontal = abs(velocity.x) > abs(velocity.y)
+        
+        if isPanningHorizontal {
+            return true
+        }
+        if !isScrollViewTopEdge {
+            return false
+        }
+        if isScrollViewTopEdge && isPanningDown {
+            return true
+        }
+        if isScrollViewTopEdge && isPanningUp {
+            return false
+        }
+        return false
     }
     
 }
