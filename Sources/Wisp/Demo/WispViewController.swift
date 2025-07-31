@@ -9,12 +9,9 @@ import UIKit
 
 public class WispViewController: UIViewController {
     
-    public var presentedAreaInset: NSDirectionalEdgeInsets// = .init(top: 130, leading: 10, bottom: 130, trailing: 10)
-    
     let imageView = UIImageView(image: .init(systemName: ["swift", "apple.logo"].randomElement()!))
     
-    public init(viewInset: NSDirectionalEdgeInsets) {
-        self.presentedAreaInset = viewInset
+    override public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nil, bundle: nil)
         
         imageView.contentMode = .scaleAspectFit

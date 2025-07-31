@@ -12,15 +12,20 @@ internal final class WispPresentationAnimator: NSObject {
     
     let animator: UIViewPropertyAnimator
     
-    private let configuration: WispConfiguration
+    private let context: WispContext
     private var startFrame: CGRect
     private let interactor: UIPercentDrivenInteractiveTransition
     
-    init(animator: UIViewPropertyAnimator, startFrame: CGRect, interactor: UIPercentDrivenInteractiveTransition, configuration: WispConfiguration) {
+    init(
+        animator: UIViewPropertyAnimator,
+        startFrame: CGRect,
+        interactor: UIPercentDrivenInteractiveTransition,
+        context: WispContext
+    ) {
         self.animator = animator
         self.startFrame = startFrame
         self.interactor = interactor
-        self.configuration = configuration
+        self.context = context
     }
     
 }
@@ -28,14 +33,18 @@ internal final class WispPresentationAnimator: NSObject {
 extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
     
     func transitionDuration(using transitionContext: (any UIViewControllerContextTransitioning)?) -> TimeInterval {
-        return configuration.animationSpeed.rawValue
+        return context.configuration.animationSpeed.rawValue
     }
     
     func animateTransition(using transitionContext: any UIViewControllerContextTransitioning) {
         let containerView = transitionContext.containerView
-        let wispVC = transitionContext.viewController(forKey: .to) as! WispPresented
+        guard let wispVC = transitionContext.viewController(forKey: .to) else {
+            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+            return
+        }
         let wispView = wispVC.view!
         containerView.addSubview(wispView)
+        let configuration = context.configuration
         
         wispVC.view.clipsToBounds = true
         wispVC.view.frame = startFrame
@@ -56,8 +65,8 @@ extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
                 wispView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor,
                                                  constant: -configuration.presentedAreaInset.bottom),
             ])
-            wispVC.view.layer.cornerRadius = self.configuration.finalCornerRadius
-            wispVC.view.layer.maskedCorners = self.configuration.finalMaskedCorner
+            wispVC.view.layer.cornerRadius = configuration.finalCornerRadius
+            wispVC.view.layer.maskedCorners = configuration.finalMaskedCorner
             wispVC.view.layer.cornerCurve = .continuous
             containerView.layoutIfNeeded()
         }
@@ -72,7 +81,9 @@ extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
         // 단지 뷰가 자동으로 펼쳐지는데, 펼쳐지는 중간에 사용자가 이 뷰를 잡을 수 있는 것.
         // 그래서 처음에는 그냥 자동으로 애니메이션이 실행되도록 구현함.
         DispatchQueue.main.async { [weak self] in
-            self?.interactor.finish()
+            guard let self else { return }
+            self.context.collectionView?.cellForItem(at: self.context.indexPath)?.alpha = 0
+            self.interactor.finish()
         }
         
     }

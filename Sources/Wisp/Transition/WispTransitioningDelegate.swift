@@ -17,17 +17,16 @@ internal final class WispTransitioningDelegate: NSObject, UIViewControllerTransi
     )
     private let context: WispContext
     private let presentationInteractor = UIPercentDrivenInteractiveTransition()
-    private let startCellFrame: CGRect
+    private var startCellFrame: CGRect {
+        guard let selectedCell = context.collectionView?.cellForItem(at: context.indexPath) else {
+            fatalError()
+        }
+        return selectedCell.convert(selectedCell.contentView.frame, to: nil)
+    }
     private var cancellables: Set<AnyCancellable> = []
     
     init(context: WispContext) {
         self.context = context
-        // 시작할 때 셀 frame
-        guard let selectedCell = context.collectionView?.cellForItem(at: context.indexPath) else {
-            fatalError()
-        }
-        let convertedCellFrame = selectedCell.convert(selectedCell.contentView.frame, to: nil)
-        self.startCellFrame = convertedCellFrame
         super.init()
     }
     
@@ -37,11 +36,8 @@ internal final class WispTransitioningDelegate: NSObject, UIViewControllerTransi
         presenting: UIViewController?,
         source: UIViewController
     ) -> UIPresentationController? {
-        guard let wispDismissableVC = presented as? WispPresented else {
-            fatalError()
-        }
         return WispPresentationController(
-            presentedViewController: wispDismissableVC,
+            presentedViewController: presented as WispPresented,
             presenting: presenting,
         )
     }
@@ -56,11 +52,11 @@ internal final class WispTransitioningDelegate: NSObject, UIViewControllerTransi
             animator: presentingAnimator,
             startFrame: startCellFrame,
             interactor: presentationInteractor,
-            configuration: context.configuration
+            context: context
         )
     }
     
-    // MARK: - Presentation Animator (Interaction)
+//     MARK: - Presentation Animator (Interaction)
     func interactionControllerForPresentation(
         using animator: UIViewControllerAnimatedTransitioning
     ) -> UIViewControllerInteractiveTransitioning? {

@@ -67,9 +67,9 @@ private extension WispManager {
         restoringCell.alpha = 0
         card.frame = restoringCell.convert(
             restoringCell.contentView.frame,
-            to: currentWindow
+            to: context.sourceViewController?.view
         )
-        currentWindow.layoutIfNeeded()
+        context.sourceViewController?.view.layoutIfNeeded()
     }
     
     func restore(startFrame: CGRect, using context: WispContext) {

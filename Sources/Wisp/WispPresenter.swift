@@ -44,7 +44,6 @@ public extension WispPresenter {
         
         let selectedCell = collectionView.cellForItem(at: indexPath)
         let cellSnapshot = selectedCell?.snapshotView(afterScreenUpdates: false)
-        selectedCell?.alpha = 0
         
         let wispContext = WispContext(
             sourceViewController: presentingViewController,

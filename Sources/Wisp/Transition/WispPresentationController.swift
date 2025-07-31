@@ -130,6 +130,7 @@ private extension WispPresentationController {
         }
     }
     
+    /// find if one of its subview is scroll view recursively and returns the first-found scroll view.
     private func findScrollView(in view: UIView) -> UIScrollView? {
         if let scrollView = view as? UIScrollView {
             return scrollView
@@ -152,32 +153,47 @@ extension WispPresentationController: UIGestureRecognizerDelegate {
     }
     
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        print(#function)
         let view = wispDismissableVC.view!
+
+        
         guard let scrollView = findScrollView(in: view) else { return true }
+        let contentSize = scrollView.contentSize
         
         let velocity = (gestureRecognizer as? UIPanGestureRecognizer)?.velocity(in: view) ?? .zero
         
-        // 아래로 끌기 + 스크롤뷰가 최상단이면 → dismiss 허용
+        let isPannigToTop = velocity.y < -abs(velocity.x)
+        let isPanningToLeft = velocity.x < -abs(velocity.y)
+        let isPanningToRight = velocity.x > abs(velocity.y)
+        let isPannigToBottom = velocity.y > abs(velocity.x)
         
-        let isPanningDown = velocity.y > abs(velocity.x)
-        let isPanningUp = -velocity.y > abs(velocity.x)
-        let isScrollViewTopEdge = scrollView.contentOffset.y <= 0
-        let isPanningHorizontal = abs(velocity.x) > abs(velocity.y)
+        /// whether scroll view's vertical size exceeds its bounds.
+        let contentVerticalScrollable = contentSize.height >= scrollView.bounds.center.y
+        /// whether scroll view's horizontal size exceeds its bounds.
+        let contentHorizontalScrollable = contentSize.width >= scrollView.bounds.center.x
         
-        if isPanningHorizontal {
+        /// whether the scroll view's content size exceeds its bounds. (not related to `isScrollEnabled` property.)
+        let isContentScrollable = contentVerticalScrollable || contentHorizontalScrollable
+        
+        guard isContentScrollable else {
             return true
         }
-        if !isScrollViewTopEdge {
-            return false
-        }
-        if isScrollViewTopEdge && isPanningDown {
+        
+        // abount scroll view state
+        let isAtTopEdge = scrollView.contentOffset.y <= -scrollView.contentInset.top
+        let isAtLeftEdge = scrollView.contentOffset.x <= -scrollView.contentInset.left
+        let isAtRightEdge = scrollView.contentOffset.x >= (contentSize.width-scrollView.bounds.width) + scrollView.contentInset.right
+        let isAtBottomEdge = scrollView.contentOffset.y >= (contentSize.height-scrollView.bounds.height) + scrollView.contentInset.bottom
+        
+        if (isAtTopEdge && isPannigToBottom) ||
+            (isAtLeftEdge && isPanningToRight) ||
+            (isAtRightEdge && isPanningToLeft) ||
+            (isAtBottomEdge && isPannigToTop)
+        {
+            scrollView.panGestureRecognizer.require(toFail: self.dragPanGesture)
             return true
-        }
-        if isScrollViewTopEdge && isPanningUp {
+        } else {
             return false
         }
-        return false
     }
     
 }
