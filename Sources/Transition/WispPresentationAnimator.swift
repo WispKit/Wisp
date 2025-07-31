@@ -45,9 +45,16 @@ extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
         let wispView = wispVC.view!
         containerView.addSubview(wispView)
         let configuration = context.configuration
-        
+        let presentedAreaInset = context.configuration.presentedAreaInset
+        wispView.frame = .init(
+            x: presentedAreaInset.top,
+            y: presentedAreaInset.leading,
+            width: containerView.bounds.width - (presentedAreaInset.leading + presentedAreaInset.trailing),
+            height: containerView.bounds.height - (presentedAreaInset.top + presentedAreaInset.bottom),
+        )
+        wispVC.setViewShowingInitialState(startFrame: startFrame)
         wispVC.view.clipsToBounds = true
-        wispVC.view.frame = startFrame
+        wispVC.view.layer.cornerCurve = .continuous
         wispVC.view.layer.cornerRadius = configuration.initialCornerRadius
         containerView.layoutIfNeeded()
         /// - Important: 반드시 wispVC.view의 레이아웃을 설정한 뒤에 호출되어야 함.
@@ -68,6 +75,7 @@ extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
             wispVC.view.layer.cornerRadius = configuration.finalCornerRadius
             wispVC.view.layer.maskedCorners = configuration.finalMaskedCorner
             wispVC.view.layer.cornerCurve = .continuous
+            wispVC.view.transform = .identity
             containerView.layoutIfNeeded()
         }
         

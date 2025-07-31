@@ -59,20 +59,18 @@ public extension WispPresented {
 internal extension WispPresented {
     
     func setViewShowingInitialState(startFrame: CGRect) {
-        let cardFinalFrame = view.frame
+        let presentedFrame = view.frame
         
-        let centerDiffX = startFrame.center.x - cardFinalFrame.center.x
-        let centerDiffY = startFrame.center.y - cardFinalFrame.center.y
+        let centerDiffX = startFrame.center.x - presentedFrame.center.x
+        let centerDiffY = startFrame.center.y - presentedFrame.center.y
         
-        let cardWidthScaleDiff = startFrame.width / cardFinalFrame.width
-        let cardHeightScaleDiff = startFrame.height / cardFinalFrame.height
+        let cardWidthScaleDiff = startFrame.width / presentedFrame.width
+        let cardHeightScaleDiff = startFrame.height / presentedFrame.height
         
         let scaleTransform = CGAffineTransform(scaleX: cardWidthScaleDiff, y: cardHeightScaleDiff)
         let centerTransform = CGAffineTransform(translationX: centerDiffX, y: centerDiffY)
         let cardTransform = scaleTransform.concatenating(centerTransform)
         let screenCornerRadius = UIDevice.current.userInterfaceIdiom == .pad ? 32.0 : 20.0
-        view.layer.cornerRadius = screenCornerRadius / ((cardWidthScaleDiff + cardHeightScaleDiff)/2)
-        view.layer.cornerCurve = .continuous
         view.transform = cardTransform
     }
     
@@ -82,13 +80,6 @@ internal extension WispPresented {
     ) {
         snapshot?.alpha = 0
         blurView.effect = UIBlurEffect(style: .regular)
-    }
-    
-    func setViewShowingFinalState() {
-        let screenCornerRadius = UIDevice.current.userInterfaceIdiom == .pad ? 32.0 : 37.0
-        view.layer.cornerRadius = screenCornerRadius
-        view.layer.cornerCurve = .continuous
-        view.transform = .identity
     }
     
 }
