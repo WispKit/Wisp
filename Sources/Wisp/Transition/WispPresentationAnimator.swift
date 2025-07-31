@@ -37,6 +37,7 @@ extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
         let wispView = wispVC.view!
         containerView.addSubview(wispView)
         
+        wispVC.view.clipsToBounds = true
         wispVC.view.frame = startFrame
         wispVC.view.layer.cornerRadius = configuration.initialCornerRadius
         containerView.layoutIfNeeded()
@@ -47,13 +48,13 @@ extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
             guard let self else { return }
             NSLayoutConstraint.activate([
                 wispView.topAnchor.constraint(equalTo: containerView.topAnchor,
-                                              constant: wispVC.presentedAreaInset.top),
+                                              constant: configuration.presentedAreaInset.top),
                 wispView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor,
-                                                  constant: wispVC.presentedAreaInset.leading),
+                                                  constant: configuration.presentedAreaInset.leading),
                 wispView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor,
-                                                   constant: -wispVC.presentedAreaInset.trailing),
+                                                   constant: -configuration.presentedAreaInset.trailing),
                 wispView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor,
-                                                 constant: -wispVC.presentedAreaInset.bottom),
+                                                 constant: -configuration.presentedAreaInset.bottom),
             ])
             wispVC.view.layer.cornerRadius = self.configuration.finalCornerRadius
             wispVC.view.layer.maskedCorners = self.configuration.finalMaskedCorner

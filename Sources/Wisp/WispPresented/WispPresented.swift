@@ -10,8 +10,6 @@ import UIKit
 
 @MainActor public protocol WispPresented: UIViewController {
     
-    var presentedAreaInset: NSDirectionalEdgeInsets { get }
-    
     func dismissCard()
     
 }

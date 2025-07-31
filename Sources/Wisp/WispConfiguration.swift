@@ -23,6 +23,7 @@ public struct WispConfiguration {
     )
     
     let animationSpeed: AnimationSpeed
+    let presentedAreaInset: NSDirectionalEdgeInsets
     let initialCornerRadius: CGFloat
     let finalCornerRadius: CGFloat
     let initialMaskedCorner: CACornerMask
@@ -30,8 +31,9 @@ public struct WispConfiguration {
     
     public init(
         animationSpeed: AnimationSpeed = .normal,
+        presentedAreaInset: NSDirectionalEdgeInsets = .zero,
         initialCornerRadius: CGFloat = 0,
-        finalCornerRadius: CGFloat = 0,
+        finalCornerRadius: CGFloat = 20,
         initialMaskedCorner: CACornerMask = [.layerMaxXMaxYCorner,
                                             .layerMaxXMinYCorner,
                                             .layerMinXMaxYCorner,
@@ -42,6 +44,7 @@ public struct WispConfiguration {
                                            .layerMinXMinYCorner]
     ) {
         self.animationSpeed = animationSpeed
+        self.presentedAreaInset = presentedAreaInset
         self.initialCornerRadius = initialCornerRadius
         self.finalCornerRadius = finalCornerRadius
         self.initialMaskedCorner = initialMaskedCorner

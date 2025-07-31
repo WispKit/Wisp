@@ -7,7 +7,7 @@
 
 import Foundation
 
-internal class CardStackManager {
+internal class WispContextStackManager {
     private var stack: [RestoringCard] = []
     
     func push(_ context: RestoringCard) {

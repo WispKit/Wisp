@@ -7,7 +7,7 @@
 
 import UIKit
 
-public class WispViewController: UIViewController, WispPresented {
+public class WispViewController: UIViewController {
     
     public var presentedAreaInset: NSDirectionalEdgeInsets// = .init(top: 130, leading: 10, bottom: 130, trailing: 10)
     

@@ -7,12 +7,9 @@
 
 import UIKit
 
-public class SampleOrangeNavigationController: UINavigationController, WispPresented {
+public class SampleOrangeNavigationController: UINavigationController {
     
-    public var presentedAreaInset: NSDirectionalEdgeInsets
-    
-    public init(viewInset: NSDirectionalEdgeInsets) {
-        self.presentedAreaInset = viewInset
+    public init() {
         super.init(rootViewController: OrangeViewController())
     }
     

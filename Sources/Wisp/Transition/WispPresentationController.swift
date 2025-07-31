@@ -86,7 +86,6 @@ private extension WispPresentationController {
     @objc func containerBlurDidTapped(_ sender: UITapGestureRecognizer) {
         blurAnimator.stopAnimation(true)
         tapRecognizingBlurView.effect = nil
-        
         wispDismissableVC.dismissCard()
     }
     

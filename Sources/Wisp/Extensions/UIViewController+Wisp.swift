@@ -14,3 +14,5 @@ public extension UIViewController {
     }
     
 }
+
+extension UIViewController: WispPresented { }
