@@ -48,8 +48,8 @@ extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
         let presentedAreaInset = context.configuration.presentedAreaInset
         wispView.frame = .init(
             x: presentedAreaInset.top,
-            y: presentedAreaInset.leading,
-            width: containerView.bounds.width - (presentedAreaInset.leading + presentedAreaInset.trailing),
+            y: presentedAreaInset.left,
+            width: containerView.bounds.width - (presentedAreaInset.left + presentedAreaInset.right),
             height: containerView.bounds.height - (presentedAreaInset.top + presentedAreaInset.bottom),
         )
         wispVC.setViewShowingInitialState(startFrame: startFrame)
@@ -61,14 +61,13 @@ extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
         wispView.translatesAutoresizingMaskIntoConstraints = false
         
         animator.addAnimations { [weak self] in
-            guard let self else { return }
             NSLayoutConstraint.activate([
                 wispView.topAnchor.constraint(equalTo: containerView.topAnchor,
                                               constant: configuration.presentedAreaInset.top),
                 wispView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor,
-                                                  constant: configuration.presentedAreaInset.leading),
+                                                  constant: configuration.presentedAreaInset.left),
                 wispView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor,
-                                                   constant: -configuration.presentedAreaInset.trailing),
+                                                   constant: -configuration.presentedAreaInset.right),
                 wispView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor,
                                                  constant: -configuration.presentedAreaInset.bottom),
             ])
