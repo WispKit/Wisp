@@ -130,17 +130,17 @@ private extension WispPresentationController {
         }
     }
     
-    /// find if one of its subview is scroll view recursively and returns the first-found scroll view.
-    private func findScrollView(in view: UIView) -> UIScrollView? {
+    /// find every subview as scroll view recursively and returns all found scroll views.
+    private func findSubScrollViews(in view: UIView) -> Set<UIScrollView> {
+        var subScrollViews: Set<UIScrollView> = []
+        
         if let scrollView = view as? UIScrollView {
-            return scrollView
+            subScrollViews.insert(scrollView)
         }
         for subview in view.subviews {
-            if let scroll = findScrollView(in: subview) {
-                return scroll
-            }
+            subScrollViews.formUnion(findSubScrollViews(in: subview))
         }
-        return nil
+        return subScrollViews
     }
     
 }
@@ -154,18 +154,27 @@ extension WispPresentationController: UIGestureRecognizerDelegate {
     
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         let view = wispDismissableVC.view!
-
-        
-        guard let scrollView = findScrollView(in: view) else { return true }
-        let contentSize = scrollView.contentSize
+        let subScrollViews: Set<UIScrollView> = findSubScrollViews(in: view)
         
         let velocity = (gestureRecognizer as? UIPanGestureRecognizer)?.velocity(in: view) ?? .zero
         
+        for subScrollView in subScrollViews {
+            if shouldAllowPanGestureAtScrollEdge(of: velocity, with: subScrollView) {
+                continue
+            } else {
+                return false
+            }
+        }
+        return true
+    }
+    
+    private func shouldAllowPanGestureAtScrollEdge(of velocity: CGPoint, with scrollView: UIScrollView) -> Bool {
         let isPannigToTop = velocity.y < -abs(velocity.x)
         let isPanningToLeft = velocity.x < -abs(velocity.y)
         let isPanningToRight = velocity.x > abs(velocity.y)
         let isPannigToBottom = velocity.y > abs(velocity.x)
         
+        let contentSize = scrollView.contentSize
         /// whether scroll view's vertical size exceeds its bounds.
         let contentVerticalScrollable = contentSize.height >= scrollView.bounds.center.y
         /// whether scroll view's horizontal size exceeds its bounds.
@@ -195,5 +204,6 @@ extension WispPresentationController: UIGestureRecognizerDelegate {
             return false
         }
     }
+    
     
 }
