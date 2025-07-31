@@ -17,19 +17,21 @@ import Combine
     private let cardRestoringSizeAnimator = UIViewPropertyAnimator(duration: 0.7, dampingRatio: 1)
     private let cardRestoringMovingAnimator = UIViewPropertyAnimator(duration: 0.6, dampingRatio: 0.8)
     
-    private let cardStackManager = CardStackManager()
+    let contextStackManager = WispContextStackManager()
     private let restoringCard = RestoringCard()
     private var cancellables: Set<AnyCancellable> = []
-    internal var activeContext: WispContext?
+    internal var currentContext: WispContext? {
+        contextStackManager.currentContext
+    }
     
     var transitioningDelegate: WispTransitioningDelegate? = nil
     
     func handleInteractiveDismissEnded(startFrame: CGRect) {
-        guard let context = activeContext else { return }
+        guard let context = currentContext else { return }
         // 컬렉션뷰 구독 초기화
         cancellables = []
         restore(startFrame: startFrame, using: consume context)
-        activeContext = nil
+        contextStackManager.pop()
     }
     
 }

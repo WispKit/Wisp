@@ -17,4 +17,8 @@ internal struct WispContext {
     var presentedSnapshot: UIView?
     let configuration: WispConfiguration
     
+    internal mutating func setPresentedSnapshot(_ snapshot: UIView?) {
+        self.presentedSnapshot = snapshot
+    }
+    
 }

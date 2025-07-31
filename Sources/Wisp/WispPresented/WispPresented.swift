@@ -32,7 +32,10 @@ public extension WispPresented {
             guard
                 let wispTransitioningDelegate = transitioningDelegate as? WispTransitioningDelegate
             else {
-                dismiss(animated: true)
+                dismiss(animated: true) {
+                    guard let context = WispManager.shared.currentContext else { return }
+                    context.collectionView?.cellForItem(at: context.indexPath)?.alpha = 1
+                }
                 return
             }
             wispTransitioningDelegate.presentingAnimator.stopAnimation(false)
@@ -43,7 +46,7 @@ public extension WispPresented {
     
     private func startCardDismissing() {
         let snapshot = view.snapshotView(afterScreenUpdates: true)
-        WispManager.shared.activeContext?.presentedSnapshot = snapshot
+        WispManager.shared.contextStackManager.currentContext?.setPresentedSnapshot(snapshot)
         WispManager.shared.handleInteractiveDismissEnded(startFrame: view.frame)
         dismiss(animated: false)
         view.alpha = 0

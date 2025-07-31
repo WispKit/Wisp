@@ -7,19 +7,29 @@
 
 import Foundation
 
-internal class WispContextStackManager {
-    private var stack: [RestoringCard] = []
+@MainActor internal class WispContextStackManager {
     
-    func push(_ context: RestoringCard) {
+    private var stack: [WispContext] = []
+
+    var currentContext: WispContext? {
+        get {
+            return stack.last
+        }
+        set {
+            if let newValue {
+                _ = stack.popLast()
+                stack.append(newValue)
+            } else {
+                _ = stack.popLast()
+            }
+        }
+    }
+
+    func push(_ context: WispContext) {
         stack.append(context)
     }
     
-    func pop() -> RestoringCard? {
-        guard !stack.isEmpty else { return nil }
-        return stack.removeLast()
-    }
-
-    func currentContext() -> RestoringCard? {
-        return stack.last
+    func pop() -> WispContext? {
+        return stack.popLast()
     }
 }

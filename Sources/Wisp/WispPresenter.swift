@@ -59,7 +59,7 @@ public extension WispPresenter {
             context: wispContext,
         )
         
-        WispManager.shared.activeContext = wispContext
+        WispManager.shared.contextStackManager.push(wispContext)
         WispManager.shared.transitioningDelegate = wispTransitioningDelegate
         viewControllerToPresent.modalPresentationStyle = .custom
         viewControllerToPresent.transitioningDelegate = wispTransitioningDelegate
