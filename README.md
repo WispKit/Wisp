@@ -35,7 +35,7 @@ This library supports installation via [Swift Package Manager](https://swift.org
 4. Select the version and add it to your target.
 
 
-## 🚀 Quick Start
+## 🚀 How To Use
 1.	Use `WispableCollectionView` instead of a regular UICollectionView.
 2.	Present your UIViewController with just one method call!
 
