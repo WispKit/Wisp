@@ -60,6 +60,7 @@ internal class WispPresentationController: UIPresentationController {
         
         dragPanGesture.allowedScrollTypesMask = [.continuous]
         dragPanGesture.addTarget(self, action: #selector(dragPanGesturehandler))
+        dragPanGesture.maximumNumberOfTouches = 1
         wispDismissableVC.view.addGestureRecognizer(dragPanGesture)
         
         blurAnimator.addAnimations { [weak self] in
@@ -83,6 +84,7 @@ internal class WispPresentationController: UIPresentationController {
 }
 
 
+// MARK: - Gesture Recognizer Handling
 private extension WispPresentationController {
     
     @objc func containerBlurDidTapped(_ sender: UITapGestureRecognizer) {
@@ -116,7 +118,7 @@ private extension WispPresentationController {
         default:
             let velocity = gesture.velocity(in: view)
             let velocityScalar = sqrt(pow(velocity.x, 2) + pow(velocity.y, 2))
-            let shouldDismiss = (hypotenuse > 230 || velocityScalar > 1000) && (translation.y > 0)
+            let shouldDismiss = (hypotenuse > 230.0 || velocityScalar > (2300.0-hypotenuse*1.5)) && (translation.y > 0.0)
             
             if shouldDismiss {
                 wispDismissableVC.dismissCard()
@@ -146,6 +148,7 @@ private extension WispPresentationController {
 }
 
 
+// MARK: - UIGestureRecognizerDelegate
 extension WispPresentationController: UIGestureRecognizerDelegate {
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -154,11 +157,19 @@ extension WispPresentationController: UIGestureRecognizerDelegate {
     
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         let view = wispDismissableVC.view!
-        let subScrollViews: Set<UIScrollView> = findSubScrollViews(in: view)
+        let gesturePoint = gestureRecognizer.location(in: view)
         
+        let subScrollViews: Set<UIScrollView> = findSubScrollViews(in: view)
+        let filteredSubScrollView = subScrollViews.filter { scrollView in
+            let scrollViewConvertedFrame = view.convert(scrollView.frame, to: view)
+            return scrollViewConvertedFrame.contains(consume gesturePoint)
+        }
         let velocity = (gestureRecognizer as? UIPanGestureRecognizer)?.velocity(in: view) ?? .zero
         
-        for subScrollView in subScrollViews {
+        /// In the following cases, the `wisp`'s `pan gesture` is recognized:
+        /// - There is no `UIScrollView` among the `subviews`.
+        /// - All `UIScrollView`s containing the gesture location among the `subviews` are located at the edge opposite to the gesture's direction.
+        for subScrollView in filteredSubScrollView {
             if shouldAllowPanGestureAtScrollEdge(of: velocity, with: subScrollView) {
                 continue
             } else {
@@ -168,6 +179,12 @@ extension WispPresentationController: UIGestureRecognizerDelegate {
         return true
     }
     
+    /// Determines whether Wisp's gesture can take over from the scroll view's pan gesture
+    /// when the scroll view has reached its content boundary.
+    /// - Parameters:
+    ///   - velocity: The gesture's velocity, used to determine the direction of the pan.
+    ///   - scrollView: The scroll view that is recognizing the pan gesture alongside Wisp.
+    /// - Returns: Returns `true` if Wisp's pan gesture should be recognized instead of the scroll view's.
     private func shouldAllowPanGestureAtScrollEdge(of velocity: CGPoint, with scrollView: UIScrollView) -> Bool {
         let isPannigToTop = velocity.y < -abs(velocity.x)
         let isPanningToLeft = velocity.x < -abs(velocity.y)
@@ -187,7 +204,7 @@ extension WispPresentationController: UIGestureRecognizerDelegate {
             return true
         }
         
-        // abount scroll view state
+        // where scroll view is at the edge of specific direction
         let isAtTopEdge = scrollView.contentOffset.y <= -scrollView.contentInset.top
         let isAtLeftEdge = scrollView.contentOffset.x <= -scrollView.contentInset.left
         let isAtRightEdge = scrollView.contentOffset.x >= (contentSize.width-scrollView.bounds.width) + scrollView.contentInset.right
