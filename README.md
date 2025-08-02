@@ -27,7 +27,7 @@
 
 # ⬇️ Installation
 
-This library supports installation via [Swift Package Manager](https://swift.org/package-manager/) only:
+This library supports installation via [Swift Package Manager](https://swift.org/package-manager/):
 
 1. Open your Xcode project.
 2. Go to **File > Add Package Dependencies...**
@@ -73,23 +73,6 @@ wisp.present(secondVC, collectionView: myCollectionView, at: indexPath)
 ```
 ### ✅ That’s it! No delegate mess, no manual transition setup. It just works.
 
-#### 3. Customize with WispConfiguration (optional)
-
-You can optionally provide a custom WispConfiguration to control transition behavior.
-
-``` swift
-let config = WispConfiguration(
-    animationSpeed: .normal,
-    presentedAreaInset: NSDirectionalEdgeInsets(top: 32, leading: 16, bottom: 32, trailing: 16),
-    initialCornerRadius: 12,
-    finalCornerRadius: 24,
-    initialMaskedCorner: [.layerMinXMinYCorner, .layerMaxXMinYCorner],
-    finalMaskedCorner: [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-)
-
-wisp.present(detailVC, collectionView: collectionView, at: indexPath, configuration: config)
-```
-
 ## ⚙️ Configuration
 
 WispConfiguration allows you to tweak the animation and layout behavior.
@@ -119,7 +102,7 @@ All properties are optional and have default values.
 |finalMaskedCorner|CACornerMask|Corners to apply rounding at end|
 
 For example, Use presentedAreaInset to customize the width and height of each card presented.
-The folleing deeft l
+
 | fullscreen | formSheet style | card | small pop up |
 |:--:|:--:|:--:|:--:|
 | <img src="https://github.com/user-attachments/assets/dcbbc640-c7a1-439f-ba62-9c73e09b8c9b" width=130> | <img src="https://github.com/user-attachments/assets/0564c85f-9a09-4d3c-91be-8aaa83c29035" width=130> | <img src="https://github.com/user-attachments/assets/6d55a707-df20-46da-9211-3183461d7f85" width=130>  |  <img src="https://github.com/user-attachments/assets/ea68d539-889a-4017-b1ed-a6e29ec5d3df" width=130> |
