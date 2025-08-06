@@ -62,6 +62,7 @@ public extension WispPresenter {
         WispManager.shared.transitioningDelegate = wispTransitioningDelegate
         viewControllerToPresent.modalPresentationStyle = .custom
         viewControllerToPresent.transitioningDelegate = wispTransitioningDelegate
+        presentingViewController.view.endEditing(true)
         presentingViewController.present(viewControllerToPresent, animated: true)
     }
     
