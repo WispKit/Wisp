@@ -80,7 +80,11 @@ private extension WispManager {
         
         // addSubView
         context.sourceViewController?.view.addSubview(restoringCard)
-        context.sourceViewController?.view.bringSubviewToFront(restoringCard)
+        if let collectionView = context.collectionView {
+            context.sourceViewController?.view.insertSubview(restoringCard, aboveSubview: collectionView)
+        } else {
+            context.sourceViewController?.view.bringSubviewToFront(restoringCard)
+        }
         syncRestoringCardFrameToCell(restoringCard, context: context)
         
         // collection view scrolling subscribing
