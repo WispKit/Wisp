@@ -132,17 +132,36 @@ private extension WispPresentationController {
         }
     }
     
-    /// find every subview as scroll view recursively and returns all found scroll views.
-    private func findSubScrollViews(in view: UIView) -> Set<UIScrollView> {
-        var subScrollViews: Set<UIScrollView> = []
+}
+
+
+// MARK: - Finding Subviews in Specific Condition.
+extension WispPresentationController {
+    
+    /// Recursively finds and returns all subviews of the given view that are of the specified type.
+    private func findSubViews<T: UIView>(in view: UIView) -> Set<T> {
+        var subViews: Set<T> = []
         
-        if let scrollView = view as? UIScrollView {
-            subScrollViews.insert(scrollView)
+        if let viewInType = view as? T {
+            subViews.insert(viewInType)
         }
         for subview in view.subviews {
-            subScrollViews.formUnion(findSubScrollViews(in: subview))
+            subViews.formUnion(findSubViews(in: subview))
         }
-        return subScrollViews
+        return subViews
+    }
+    
+    /// If one of a view's subviews is `First Responder`, return the `First Responder`. Otherwise, return `nil`.
+    private func findFirstResponder(in view: UIView) -> UIView? {
+        if view.isFirstResponder {
+            return view
+        }
+        for subview in view.subviews {
+            if let firstResponder = findFirstResponder(in: subview) {
+                return firstResponder
+            }
+        }
+        return nil
     }
     
 }
@@ -159,10 +178,32 @@ extension WispPresentationController: UIGestureRecognizerDelegate {
         let view = wispDismissableVC.view!
         let gesturePoint = gestureRecognizer.location(in: view)
         
-        let subScrollViews: Set<UIScrollView> = findSubScrollViews(in: view)
+        /// blocks `wisp`'s `pan gesture` when tried to pan `first responder`.
+        if let firstResponder = findFirstResponder(in: view),
+            firstResponder.isDescendant(of: view),
+            let superview = firstResponder.superview {
+            let firstResponderConvertedFrame = superview.convert(firstResponder.frame, to: view)
+            if firstResponderConvertedFrame.contains(gesturePoint) {
+                return false
+            }
+        }
+        
+        /// blocks `wisp`'s `pan gesture` when tried to pan `UIControls`.
+        let subControls: Set<UIControl> = findSubViews<UIControl>(in: view)
+        for control in subControls {
+            if control.isDescendant(of: view){
+                let controlConvertedFrame = view.convert(control.frame, to: view)
+                if controlConvertedFrame.contains(gesturePoint) {
+                    return false
+                }
+            }
+        }
+        
+        let subScrollViews: Set<UIScrollView> = findSubViews<UIScrollView>(in: view)
         let filteredSubScrollView = subScrollViews.filter { scrollView in
+            guard scrollView.isDescendant(of: view) else { return false }
             let scrollViewConvertedFrame = view.convert(scrollView.frame, to: view)
-            return scrollViewConvertedFrame.contains(consume gesturePoint)
+            return scrollViewConvertedFrame.contains(gesturePoint)
         }
         let velocity = (gestureRecognizer as? UIPanGestureRecognizer)?.velocity(in: view) ?? .zero
         
@@ -193,9 +234,12 @@ extension WispPresentationController: UIGestureRecognizerDelegate {
         
         let contentSize = scrollView.contentSize
         /// whether scroll view's vertical size exceeds its bounds.
-        let contentVerticalScrollable = contentSize.height >= scrollView.bounds.center.y
+        let contentVerticalScrollable = scrollView.bounds.height <
+        contentSize.height + (scrollView.adjustedContentInset.top + scrollView.adjustedContentInset.bottom)
+        
         /// whether scroll view's horizontal size exceeds its bounds.
-        let contentHorizontalScrollable = contentSize.width >= scrollView.bounds.center.x
+        let contentHorizontalScrollable = scrollView.bounds.width <
+        contentSize.width + (scrollView.adjustedContentInset.left + scrollView.adjustedContentInset.right)
         
         /// whether the scroll view's content size exceeds its bounds. (not related to `isScrollEnabled` property.)
         let isContentScrollable = contentVerticalScrollable || contentHorizontalScrollable
