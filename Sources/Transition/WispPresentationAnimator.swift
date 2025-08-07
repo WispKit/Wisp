@@ -47,22 +47,24 @@ extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
         }
         let wispView = wispVC.view!
         
-        // Set a dummy frame to prevent the 'UIViewAlertForUnsatisfiableConstraints' symbolic breakpoint.
-        // This frame is temporary and not the actual frame of the card.
-        // The actual layout is handled by Auto Layout.
-        containerView.addSubview(cardContainerView)
-        cardContainerView.frame = containerView.bounds
-        cardContainerView.addSubview(wispView)
-        wispView.frame = cardContainerView.bounds
-        
-        let configuration = context.configuration
-        let presentedAreaInset = context.configuration.presentedAreaInset
         cardContainerView.translatesAutoresizingMaskIntoConstraints = false
         wispView.translatesAutoresizingMaskIntoConstraints = false
         
+        containerView.addSubview(cardContainerView)
+        cardContainerView.addSubview(wispView)
+        
+        let configuration = context.configuration
+        let presentedAreaInset = context.configuration.presentedAreaInset
+        
         // Setting Initial Position
-        let topConstraint = cardContainerView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: startFrame.minY)
-        let leftConstraint = cardContainerView.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: startFrame.minX)
+        let topConstraint = cardContainerView.topAnchor.constraint(
+            equalTo: containerView.topAnchor,
+            constant: startFrame.minY
+        )
+        let leftConstraint = cardContainerView.leftAnchor.constraint(
+            equalTo: containerView.leftAnchor,
+            constant: startFrame.minX
+        )
         let rightConstraint = cardContainerView.rightAnchor.constraint(
             equalTo: containerView.rightAnchor,
             constant: -(containerView.frame.width - startFrame.maxX)
@@ -78,8 +80,16 @@ extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
             width: containerView.frame.width - (presentedAreaInset.left + presentedAreaInset.right),
             height: containerView.frame.height - (presentedAreaInset.top + presentedAreaInset.bottom)
         )
-        wispView.widthAnchor.constraint(equalToConstant: finalSize.width).isActive = true
-        wispView.heightAnchor.constraint(equalToConstant: finalSize.height).isActive = true
+        let wispViewWidthConstraint = wispView.widthAnchor.constraint(equalToConstant: finalSize.width)
+        let wispViewHeightConstraint = wispView.heightAnchor.constraint(equalToConstant: finalSize.height)
+        wispViewWidthConstraint.isActive = true
+        wispViewHeightConstraint.isActive = true
+        
+        let wispViewTopConstraint = wispView.topAnchor.constraint(equalTo: cardContainerView.topAnchor)
+        let wispViewLeadingConstraint = wispView.leadingAnchor.constraint(equalTo: cardContainerView.leadingAnchor)
+        let wispViewTrailingConstraint = wispView.trailingAnchor.constraint(equalTo: cardContainerView.trailingAnchor)
+        let wispViewBottomConstraint = wispView.bottomAnchor.constraint(equalTo: cardContainerView.bottomAnchor)
+        
         wispView.centerXAnchor.constraint(equalTo: cardContainerView.centerXAnchor).isActive = true
         wispView.centerYAnchor.constraint(equalTo: cardContainerView.centerYAnchor).isActive = true
         wispVC.view.transform = .init(
@@ -103,6 +113,15 @@ extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
             self.cardContainerView.layer.cornerRadius = configuration.finalCornerRadius
             self.cardContainerView.layer.maskedCorners = configuration.finalMaskedCorner
             self.cardContainerView.layer.cornerCurve = .continuous
+            
+            wispViewWidthConstraint.isActive = false
+            wispViewHeightConstraint.isActive = false
+            
+            wispViewTopConstraint.isActive = true
+            wispViewLeadingConstraint.isActive = true
+            wispViewTrailingConstraint.isActive = true
+            wispViewBottomConstraint.isActive = true
+            
             wispVC.view.transform = .identity
             containerView.layoutIfNeeded()
         }
