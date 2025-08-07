@@ -18,10 +18,6 @@ import UIKit
 public extension WispPresented {
     
     func dismissCard() {
-        let screenCornerRadius = UIDevice.current.userInterfaceIdiom == .pad ? 32.0 : 37.0
-        view.layer.cornerRadius = screenCornerRadius
-        view.layer.cornerCurve = .continuous
-        
         // 배경 블러 없애기
         guard let presentationController = presentationController as? WispPresentationController else {
             return
@@ -45,41 +41,18 @@ public extension WispPresented {
     }
     
     private func startCardDismissing() {
+        defer {
+            dismiss(animated: false)
+            view.alpha = 0
+            view.isHidden = true
+        }
+        
         let snapshot = view.snapshotView(afterScreenUpdates: true)
         WispManager.shared.contextStackManager.currentContext?.setPresentedSnapshot(snapshot)
-        WispManager.shared.handleInteractiveDismissEnded(startFrame: view.frame)
-        dismiss(animated: false)
-        view.alpha = 0
-        view.isHidden = true
-    }
-    
-}
-
-
-internal extension WispPresented {
-    
-    func setViewShowingInitialState(startFrame: CGRect) {
-        let presentedFrame = view.frame
-        
-        let centerDiffX = startFrame.center.x - presentedFrame.center.x
-        let centerDiffY = startFrame.center.y - presentedFrame.center.y
-        
-        let cardWidthScaleDiff = startFrame.width / presentedFrame.width
-        let cardHeightScaleDiff = startFrame.height / presentedFrame.height
-        
-        let scaleTransform = CGAffineTransform(scaleX: cardWidthScaleDiff, y: cardHeightScaleDiff)
-        let centerTransform = CGAffineTransform(translationX: centerDiffX, y: centerDiffY)
-        let cardTransform = scaleTransform.concatenating(centerTransform)
-        let screenCornerRadius = UIDevice.current.userInterfaceIdiom == .pad ? 32.0 : 20.0
-        view.transform = cardTransform
-    }
-    
-    func setSnapshotShowingFinalState(
-        _ snapshot: UIView?,
-        blurView: UIVisualEffectView
-    ) {
-        snapshot?.alpha = 0
-        blurView.effect = UIBlurEffect(style: .regular)
+        guard let cardContainerView = view.superview else {
+            return
+        }
+        WispManager.shared.handleInteractiveDismissEnded(startFrame: cardContainerView.frame)
     }
     
 }

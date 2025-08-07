@@ -16,6 +16,7 @@ internal final class WispTransitioningDelegate: NSObject, UIViewControllerTransi
         dampingRatio: 1
     )
     private let context: WispContext
+    private let cardContainerView = UIView()
     private let presentationInteractor = UIPercentDrivenInteractiveTransition()
     private var startCellFrame: CGRect {
         guard let selectedCell = context.collectionView?.cellForItem(at: context.indexPath) else {
@@ -39,6 +40,7 @@ internal final class WispTransitioningDelegate: NSObject, UIViewControllerTransi
         return WispPresentationController(
             presentedViewController: presented as WispPresented,
             presenting: presenting,
+            cardContainerView: cardContainerView
         )
     }
     
@@ -50,13 +52,14 @@ internal final class WispTransitioningDelegate: NSObject, UIViewControllerTransi
     ) -> (any UIViewControllerAnimatedTransitioning)? {
         return WispPresentationAnimator(
             animator: presentingAnimator,
+            cardContainerView: cardContainerView,
             startFrame: startCellFrame,
             interactor: presentationInteractor,
             context: context
         )
     }
     
-//     MARK: - Presentation Animator (Interaction)
+    // MARK: - Presentation Animator (Interaction)
     func interactionControllerForPresentation(
         using animator: UIViewControllerAnimatedTransitioning
     ) -> UIViewControllerInteractiveTransitioning? {

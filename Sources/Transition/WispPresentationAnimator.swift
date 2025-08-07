@@ -13,16 +13,19 @@ internal final class WispPresentationAnimator: NSObject {
     let animator: UIViewPropertyAnimator
     
     private let context: WispContext
+    private let cardContainerView: UIView
     private var startFrame: CGRect
     private let interactor: UIPercentDrivenInteractiveTransition
     
     init(
         animator: UIViewPropertyAnimator,
+        cardContainerView: UIView,
         startFrame: CGRect,
         interactor: UIPercentDrivenInteractiveTransition,
         context: WispContext
     ) {
         self.animator = animator
+        self.cardContainerView = cardContainerView
         self.startFrame = startFrame
         self.interactor = interactor
         self.context = context
@@ -43,37 +46,63 @@ extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
             return
         }
         let wispView = wispVC.view!
-        containerView.addSubview(wispView)
+        
+        // Set a dummy frame to prevent the 'UIViewAlertForUnsatisfiableConstraints' symbolic breakpoint.
+        // This frame is temporary and not the actual frame of the card.
+        // The actual layout is handled by Auto Layout.
+        containerView.addSubview(cardContainerView)
+        cardContainerView.frame = containerView.bounds
+        cardContainerView.addSubview(wispView)
+        wispView.frame = cardContainerView.bounds
+        
         let configuration = context.configuration
         let presentedAreaInset = context.configuration.presentedAreaInset
-        wispView.frame = .init(
-            x: presentedAreaInset.top,
-            y: presentedAreaInset.left,
-            width: containerView.bounds.width - (presentedAreaInset.left + presentedAreaInset.right),
-            height: containerView.bounds.height - (presentedAreaInset.top + presentedAreaInset.bottom),
-        )
-        wispVC.setViewShowingInitialState(startFrame: startFrame)
-        wispVC.view.clipsToBounds = true
-        wispVC.view.layer.cornerCurve = .continuous
-        wispVC.view.layer.cornerRadius = configuration.initialCornerRadius
-        containerView.layoutIfNeeded()
-        /// - Important: 반드시 wispVC.view의 레이아웃을 설정한 뒤에 호출되어야 함.
+        cardContainerView.translatesAutoresizingMaskIntoConstraints = false
         wispView.translatesAutoresizingMaskIntoConstraints = false
         
+        // Setting Initial Position
+        let topConstraint = cardContainerView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: startFrame.minY)
+        let leftConstraint = cardContainerView.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: startFrame.minX)
+        let rightConstraint = cardContainerView.rightAnchor.constraint(
+            equalTo: containerView.rightAnchor,
+            constant: -(containerView.frame.width - startFrame.maxX)
+        )
+        let bottomConstraint = cardContainerView.bottomAnchor.constraint(
+            equalTo: containerView.bottomAnchor,
+            constant: -(containerView.frame.height - startFrame.maxY)
+        )
+        NSLayoutConstraint.activate([topConstraint, leftConstraint, rightConstraint, bottomConstraint,])
+        
+        let initialSize = startFrame.size
+        let finalSize: CGSize = .init(
+            width: containerView.frame.width - (presentedAreaInset.left + presentedAreaInset.right),
+            height: containerView.frame.height - (presentedAreaInset.top + presentedAreaInset.bottom)
+        )
+        wispView.widthAnchor.constraint(equalToConstant: finalSize.width).isActive = true
+        wispView.heightAnchor.constraint(equalToConstant: finalSize.height).isActive = true
+        wispView.centerXAnchor.constraint(equalTo: cardContainerView.centerXAnchor).isActive = true
+        wispView.centerYAnchor.constraint(equalTo: cardContainerView.centerYAnchor).isActive = true
+        wispVC.view.transform = .init(
+            scaleX: initialSize.width / finalSize.width,
+            y: initialSize.height / finalSize.height
+        )
+        
+        cardContainerView.clipsToBounds = true
+        cardContainerView.layer.cornerCurve = .continuous
+        cardContainerView.layer.cornerRadius = configuration.initialCornerRadius
+        cardContainerView.layer.maskedCorners = configuration.initialMaskedCorner
+        containerView.layoutIfNeeded()
+        
         animator.addAnimations { [weak self] in
-            NSLayoutConstraint.activate([
-                wispView.topAnchor.constraint(equalTo: containerView.topAnchor,
-                                              constant: configuration.presentedAreaInset.top),
-                wispView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor,
-                                                  constant: configuration.presentedAreaInset.left),
-                wispView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor,
-                                                   constant: -configuration.presentedAreaInset.right),
-                wispView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor,
-                                                 constant: -configuration.presentedAreaInset.bottom),
-            ])
-            wispVC.view.layer.cornerRadius = configuration.finalCornerRadius
-            wispVC.view.layer.maskedCorners = configuration.finalMaskedCorner
-            wispVC.view.layer.cornerCurve = .continuous
+            guard let self else { return }
+            topConstraint.constant = presentedAreaInset.top
+            leftConstraint.constant = presentedAreaInset.left
+            rightConstraint.constant = -presentedAreaInset.right
+            bottomConstraint.constant = -presentedAreaInset.bottom
+            
+            self.cardContainerView.layer.cornerRadius = configuration.finalCornerRadius
+            self.cardContainerView.layer.maskedCorners = configuration.finalMaskedCorner
+            self.cardContainerView.layer.cornerCurve = .continuous
             wispVC.view.transform = .identity
             containerView.layoutIfNeeded()
         }

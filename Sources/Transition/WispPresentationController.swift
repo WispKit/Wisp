@@ -23,6 +23,7 @@ internal class WispPresentationController: UIPresentationController {
         controlPoint2: .init(x: 0.65, y: 0.23)
     )
     let tapRecognizingBlurView = UIVisualEffectView(effect: nil)
+    private let cardContainerView: UIView
     private let wispDismissableVC: any WispPresented
     
     private let tapGesture = UITapGestureRecognizer()
@@ -30,9 +31,11 @@ internal class WispPresentationController: UIPresentationController {
     
     init(
         presentedViewController: any WispPresented,
-        presenting presentingViewController: UIViewController?
+        presenting presentingViewController: UIViewController?,
+        cardContainerView: UIView
     ) {
         self.wispDismissableVC = presentedViewController
+        self.cardContainerView = cardContainerView
         super.init(
             presentedViewController: self.wispDismissableVC,
             presenting: presentingViewController
@@ -61,7 +64,8 @@ internal class WispPresentationController: UIPresentationController {
         dragPanGesture.allowedScrollTypesMask = [.continuous]
         dragPanGesture.addTarget(self, action: #selector(dragPanGesturehandler))
         dragPanGesture.maximumNumberOfTouches = 1
-        wispDismissableVC.view.addGestureRecognizer(dragPanGesture)
+        wispDismissableVC.view.isUserInteractionEnabled = false
+        cardContainerView.addGestureRecognizer(dragPanGesture)
         
         blurAnimator.addAnimations { [weak self] in
             self?.tapRecognizingBlurView.effect = UIBlurEffect(style: .regular)
@@ -72,7 +76,9 @@ internal class WispPresentationController: UIPresentationController {
         }
     }
     
-    override func presentationTransitionDidEnd(_ completed: Bool) { }
+    override func presentationTransitionDidEnd(_ completed: Bool) {
+        wispDismissableVC.view.isUserInteractionEnabled = true
+    }
     
     override func dismissalTransitionWillBegin() {
         blurAnimator.stopAnimation(true)
@@ -94,7 +100,7 @@ private extension WispPresentationController {
     }
     
     @objc func dragPanGesturehandler(_ gesture: UIPanGestureRecognizer) {
-        let view = wispDismissableVC.view!
+        let view = cardContainerView
         // 직전 제스처의 위치로부터 이동 거리(매 change state 호출 시마다 위치 재정렬함.)
         let translation = gesture.translation(in: view)
         /// pan gesture의 시작점으로부터의 거리.
@@ -175,7 +181,10 @@ extension WispPresentationController: UIGestureRecognizerDelegate {
     }
     
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        let view = wispDismissableVC.view!
+        if presentedViewController.isBeingPresented {
+            return true
+        }
+        guard let view = gestureRecognizer.view else { return false }
         let gesturePoint = gestureRecognizer.location(in: view)
         
         /// blocks `wisp`'s `pan gesture` when tried to pan `first responder`.
@@ -189,7 +198,7 @@ extension WispPresentationController: UIGestureRecognizerDelegate {
         }
         
         /// blocks `wisp`'s `pan gesture` when tried to pan `UIControls`.
-        let subControls: Set<UIControl> = findSubViews<UIControl>(in: view)
+        let subControls: Set<UIControl> = findSubViews(in: view)
         for control in subControls {
             if control.isDescendant(of: view){
                 let controlConvertedFrame = view.convert(control.frame, to: view)
@@ -199,7 +208,7 @@ extension WispPresentationController: UIGestureRecognizerDelegate {
             }
         }
         
-        let subScrollViews: Set<UIScrollView> = findSubViews<UIScrollView>(in: view)
+        let subScrollViews: Set<UIScrollView> = findSubViews(in: view)
         let filteredSubScrollView = subScrollViews.filter { scrollView in
             guard scrollView.isDescendant(of: view) else { return false }
             let scrollViewConvertedFrame = view.convert(scrollView.frame, to: view)
