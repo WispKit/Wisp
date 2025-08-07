@@ -9,7 +9,7 @@ import UIKit
 
 import Combine
 
-public class WispableCollectionView: UICollectionView {
+open class WispableCollectionView: UICollectionView {
     
     private(set) var scrollDetected: PassthroughSubject<Void, Never> = .init()
     
@@ -49,7 +49,7 @@ public class WispableCollectionView: UICollectionView {
         customLayout.delegate = self
     }
     
-    required init?(coder: NSCoder) {
+    required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
