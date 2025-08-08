@@ -236,10 +236,10 @@ extension WispPresentationController: UIGestureRecognizerDelegate {
     ///   - scrollView: The scroll view that is recognizing the pan gesture alongside Wisp.
     /// - Returns: Returns `true` if Wisp's pan gesture should be recognized instead of the scroll view's.
     private func shouldAllowPanGestureAtScrollEdge(of velocity: CGPoint, with scrollView: UIScrollView) -> Bool {
-        let isPannigToTop = velocity.y < -abs(velocity.x)
+        let isPanningToTop = velocity.y < -abs(velocity.x)
         let isPanningToLeft = velocity.x < -abs(velocity.y)
         let isPanningToRight = velocity.x > abs(velocity.y)
-        let isPannigToBottom = velocity.y > abs(velocity.x)
+        let isPanningToBottom = velocity.y > abs(velocity.x)
         
         let contentSize = scrollView.contentSize
         /// whether scroll view's vertical size exceeds its bounds.
@@ -263,10 +263,10 @@ extension WispPresentationController: UIGestureRecognizerDelegate {
         let isAtRightEdge = scrollView.contentOffset.x >= (contentSize.width-scrollView.bounds.width) + scrollView.contentInset.right
         let isAtBottomEdge = scrollView.contentOffset.y >= (contentSize.height-scrollView.bounds.height) + scrollView.contentInset.bottom
         
-        if (isAtTopEdge && isPannigToBottom) ||
+        if (isAtTopEdge && isPanningToBottom) ||
             (isAtLeftEdge && isPanningToRight) ||
             (isAtRightEdge && isPanningToLeft) ||
-            (isAtBottomEdge && isPannigToTop)
+            (isAtBottomEdge && isPanningToTop)
         {
             scrollView.panGestureRecognizer.require(toFail: self.dragPanGesture)
             return true
