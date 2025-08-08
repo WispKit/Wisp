@@ -105,6 +105,7 @@ private extension WispPresentationController {
         let translation = gesture.translation(in: view)
         /// pan gesture의 시작점으로부터의 거리.
         let hypotenuse = sqrt(pow(translation.x, 2) + pow(translation.y,2))
+        let hypotenuseThreshold: CGFloat = 160.0
         let scaleValue = 1.0 + 0.3 * (exp(-(abs(translation.x)/400.0 + translation.y/500.0)) - 1.0)
         let scale = min(1.05, max(0.7, scaleValue))
         let yPosition = translation.y < 0 ? translation.y / 3 : translation.y
@@ -119,12 +120,14 @@ private extension WispPresentationController {
             break
         case .changed:
             view.transform = scaleTransform.concatenating(translationTransform)
-            willBeDismissedIfRelease = (hypotenuse > 230) && (translation.y > 0)
+            willBeDismissedIfRelease = (hypotenuse > hypotenuseThreshold) && (translation.y > 0)
             
         default:
             let velocity = gesture.velocity(in: view)
             let velocityScalar = sqrt(pow(velocity.x, 2) + pow(velocity.y, 2))
-            let shouldDismiss = (hypotenuse > 230.0 || velocityScalar > (2300.0-hypotenuse*1.5)) && (translation.y > 0.0)
+            let shouldDismiss = (
+                (hypotenuse > hypotenuseThreshold || velocityScalar > (1500.0-hypotenuse*1.5)) &&
+                (translation.y > 0.0))
             
             if shouldDismiss {
                 wispDismissableVC.dismissCard()
