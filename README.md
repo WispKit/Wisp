@@ -1,6 +1,6 @@
 # Wisp ✨
 
-### A lightweight and beautiful card-style transition library for `UICollectionView` 
+### A lightweight and beautiful Card-style transition library for `UICollectionView` 
 ### with smooth animations and intuitive interaction.
 
 [🇰🇷 한국어 README 보기 →](./README.KO.md)
