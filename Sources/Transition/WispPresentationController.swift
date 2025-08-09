@@ -64,7 +64,6 @@ internal class WispPresentationController: UIPresentationController {
         dragPanGesture.allowedScrollTypesMask = [.continuous]
         dragPanGesture.addTarget(self, action: #selector(dragPanGesturehandler))
         dragPanGesture.maximumNumberOfTouches = 1
-        wispDismissableVC.view.isUserInteractionEnabled = false
         cardContainerView.addGestureRecognizer(dragPanGesture)
         
         blurAnimator.addAnimations { [weak self] in
@@ -76,9 +75,7 @@ internal class WispPresentationController: UIPresentationController {
         }
     }
     
-    override func presentationTransitionDidEnd(_ completed: Bool) {
-        wispDismissableVC.view.isUserInteractionEnabled = true
-    }
+    override func presentationTransitionDidEnd(_ completed: Bool) { }
     
     override func dismissalTransitionWillBegin() {
         blurAnimator.stopAnimation(true)
