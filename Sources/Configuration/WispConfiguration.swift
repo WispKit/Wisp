@@ -10,6 +10,7 @@ import UIKit
 public struct WispConfiguration {
     
     public struct AnimationOptions {
+        // Raw value means the duration of presenting animation.
         public enum Speed: Double {
             case slow = 0.8
             case normal = 0.6
@@ -22,7 +23,7 @@ public struct WispConfiguration {
     }
     
     public struct GestureOptions {
-        public var allowedDirections: GestureDirections = [.horizontalOnly, .down]
+        public var allowedDirections: GestureDirection = [.horizontalOnly, .down]
         
         public init() {}
     }
@@ -42,6 +43,8 @@ public struct WispConfiguration {
         
         public init() {}
     }
+    
+    public static let `default` = WispConfiguration.init()
     
     package private(set) var animation = AnimationOptions()
     package private(set) var gesture = GestureOptions()

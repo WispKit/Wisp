@@ -36,7 +36,7 @@ internal final class WispPresentationAnimator: NSObject {
 extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
     
     func transitionDuration(using transitionContext: (any UIViewControllerContextTransitioning)?) -> TimeInterval {
-        return context.configuration.animationSpeed.rawValue
+        return context.configuration.animation.speed.rawValue
     }
     
     func animateTransition(using transitionContext: any UIViewControllerContextTransitioning) {
@@ -54,7 +54,7 @@ extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
         cardContainerView.addSubview(wispView)
         
         let configuration = context.configuration
-        let presentedAreaInset = context.configuration.presentedAreaInset
+        let presentedAreaInset = context.configuration.layout.presentedAreaInset
         
         // Setting Initial Position
         let topConstraint = cardContainerView.topAnchor.constraint(
@@ -99,8 +99,8 @@ extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
         
         cardContainerView.clipsToBounds = true
         cardContainerView.layer.cornerCurve = .continuous
-        cardContainerView.layer.cornerRadius = configuration.initialCornerRadius
-        cardContainerView.layer.maskedCorners = configuration.initialMaskedCorner
+        cardContainerView.layer.cornerRadius = configuration.layout.initialCornerRadius
+        cardContainerView.layer.maskedCorners = configuration.layout.initialMaskedCorner
         containerView.layoutIfNeeded()
         
         animator.addAnimations { [weak self] in
@@ -110,8 +110,8 @@ extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
             rightConstraint.constant = -presentedAreaInset.right
             bottomConstraint.constant = -presentedAreaInset.bottom
             
-            self.cardContainerView.layer.cornerRadius = configuration.finalCornerRadius
-            self.cardContainerView.layer.maskedCorners = configuration.finalMaskedCorner
+            self.cardContainerView.layer.cornerRadius = configuration.layout.finalCornerRadius
+            self.cardContainerView.layer.maskedCorners = configuration.layout.finalMaskedCorner
             self.cardContainerView.layer.cornerCurve = .continuous
             
             wispViewWidthConstraint.isActive = false
