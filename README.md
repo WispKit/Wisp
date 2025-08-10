@@ -109,8 +109,8 @@ For example, Use presentedAreaInset to customize the width and height of each ca
 
 
 ## 📌 Requirements
-- iOS 15.0+
-- swift 5.0+
+- iOS: 15.0+
+- swift compiler: 5.9+
 - UIKit
 - Compositional Layout
 
