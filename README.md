@@ -3,7 +3,7 @@
 ### A lightweight and beautiful Card-style transition library for `UICollectionView` 
 ### with smooth animations and intuitive interaction.
 
-[🇰🇷 한국어 README 보기 →](./README.KO.md)
+[🇰🇷 한국어 README 보기 →](./Documentation/README.KO.md)
 ---
 
 
@@ -77,7 +77,7 @@ wisp.present(secondVC, collectionView: myCollectionView, at: indexPath)
 
 WispConfiguration allows you to tweak the animation and layout behavior.
 
-From version **1.6.0**, `WispConfiguration` has been refactored to use a **DSL-based configuration style** for better readability, maintainability, and future extensibility.
+From version **1.3.0**, `WispConfiguration` has been refactored to use a **DSL-based configuration style** for better readability, maintainability, and future extensibility.
 > For details, see the [WispConfiguration DSL Guide](./Documentation/WispConfiguration.md).
 
 ### Quick Example
@@ -102,6 +102,7 @@ let configuration = WispConfiguration { config in
     }
 }
 ```
+All properties are optional and have default values.
 
 For example, Use `presentedAreaInset` to customize the width and height of each card presented.
 

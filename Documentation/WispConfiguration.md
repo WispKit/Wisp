@@ -1,6 +1,6 @@
 # WispConfiguration DSL Guide
 
-Starting from **v1.6.0**, `WispConfiguration` uses a **DSL (Domain Specific Language) style** configuration.  
+Starting from **v1.3.0**, `WispConfiguration` uses a **DSL (Domain Specific Language) style** configuration.  
 This approach groups related settings (animation, gesture, layout) into separate namespaces, making configuration more intuitive.
 
 ---
@@ -78,7 +78,7 @@ let config = WispConfiguration(
 )
 ```
 
-From v1.6.0, this API is deprecated and will be removed in future releases.
+This API is deprecated and will be removed in future releases.
 When using deprecated APIs, you will see a compiler warning:
 
 ``` swift
