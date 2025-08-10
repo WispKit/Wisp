@@ -64,7 +64,6 @@ internal class WispPresentationController: UIPresentationController {
         dragPanGesture.allowedScrollTypesMask = [.continuous]
         dragPanGesture.addTarget(self, action: #selector(dragPanGesturehandler))
         dragPanGesture.maximumNumberOfTouches = 1
-        wispDismissableVC.view.isUserInteractionEnabled = false
         cardContainerView.addGestureRecognizer(dragPanGesture)
         
         blurAnimator.addAnimations { [weak self] in
@@ -76,9 +75,7 @@ internal class WispPresentationController: UIPresentationController {
         }
     }
     
-    override func presentationTransitionDidEnd(_ completed: Bool) {
-        wispDismissableVC.view.isUserInteractionEnabled = true
-    }
+    override func presentationTransitionDidEnd(_ completed: Bool) { }
     
     override func dismissalTransitionWillBegin() {
         blurAnimator.stopAnimation(true)
@@ -184,10 +181,14 @@ extension WispPresentationController: UIGestureRecognizerDelegate {
     }
     
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        if presentedViewController.isBeingPresented {
-            return true
-        }
         guard let view = gestureRecognizer.view else { return false }
+        guard let panGesture = gestureRecognizer as? UIPanGestureRecognizer else { return false }
+        let velocity = panGesture.velocity(in: view)
+        
+        guard let allowedDirections = WispManager.shared.currentContext?.configuration.gesture.allowedDirections else { return false
+        }
+        guard allowedDirections.contains(velocity.gestureDirections) else { return false }
+        
         let gesturePoint = gestureRecognizer.location(in: view)
         
         /// blocks `wisp`'s `pan gesture` when tried to pan `first responder`.
@@ -217,7 +218,6 @@ extension WispPresentationController: UIGestureRecognizerDelegate {
             let scrollViewConvertedFrame = view.convert(scrollView.frame, to: view)
             return scrollViewConvertedFrame.contains(gesturePoint)
         }
-        let velocity = (gestureRecognizer as? UIPanGestureRecognizer)?.velocity(in: view) ?? .zero
         
         /// In the following cases, the `wisp`'s `pan gesture` is recognized:
         /// - There is no `UIScrollView` among the `subviews`.
@@ -239,11 +239,6 @@ extension WispPresentationController: UIGestureRecognizerDelegate {
     ///   - scrollView: The scroll view that is recognizing the pan gesture alongside Wisp.
     /// - Returns: Returns `true` if Wisp's pan gesture should be recognized instead of the scroll view's.
     private func shouldAllowPanGestureAtScrollEdge(of velocity: CGPoint, with scrollView: UIScrollView) -> Bool {
-        let isPanningToTop = velocity.y < -abs(velocity.x)
-        let isPanningToLeft = velocity.x < -abs(velocity.y)
-        let isPanningToRight = velocity.x > abs(velocity.y)
-        let isPanningToBottom = velocity.y > abs(velocity.x)
-        
         let contentSize = scrollView.contentSize
         /// whether scroll view's vertical size exceeds its bounds.
         let contentVerticalScrollable = scrollView.bounds.height <
@@ -266,10 +261,10 @@ extension WispPresentationController: UIGestureRecognizerDelegate {
         let isAtRightEdge = scrollView.contentOffset.x >= (contentSize.width-scrollView.bounds.width) + scrollView.contentInset.right
         let isAtBottomEdge = scrollView.contentOffset.y >= (contentSize.height-scrollView.bounds.height) + scrollView.contentInset.bottom
         
-        if (isAtTopEdge && isPanningToBottom) ||
-            (isAtLeftEdge && isPanningToRight) ||
-            (isAtRightEdge && isPanningToLeft) ||
-            (isAtBottomEdge && isPanningToTop)
+        if (isAtTopEdge && velocity.gestureDirections == .down) ||
+            (isAtLeftEdge && velocity.gestureDirections == .right) ||
+            (isAtRightEdge && velocity.gestureDirections == .left) ||
+            (isAtBottomEdge && velocity.gestureDirections == .up)
         {
             scrollView.panGestureRecognizer.require(toFail: self.dragPanGesture)
             return true

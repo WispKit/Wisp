@@ -12,7 +12,7 @@ import UIKit
 internal final class WispTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
     
     private(set) lazy var presentingAnimator = UIViewPropertyAnimator(
-        duration: context.configuration.animationSpeed.rawValue,
+        duration: context.configuration.animation.speed.rawValue,
         dampingRatio: 1
     )
     private let context: WispContext

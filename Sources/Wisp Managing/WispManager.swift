@@ -61,9 +61,6 @@ private extension WispManager {
         guard let restoringCell = context.collectionView?.cellForItem(at: context.indexPath) else {
             return
         }
-        guard let currentWindow = context.sourceViewController?.view.window else {
-            return
-        }
         restoringCell.alpha = 0
         card.frame = restoringCell.convert(
             restoringCell.contentView.frame,
@@ -124,7 +121,7 @@ private extension WispManager {
         // restoring card 초기 디자인 설정 - 커스텀, WispConfiguration 활용하는 방향으로 구현
         let cornerRadiusProportion = max(startFrame.width / convertedCellFrame.width,
                                          startFrame.height / convertedCellFrame.height)
-        restoringCard.layer.cornerRadius = context.configuration.finalCornerRadius / cornerRadiusProportion
+        restoringCard.layer.cornerRadius = context.configuration.layout.finalCornerRadius / cornerRadiusProportion
         
         // restoring card snapshot 설정
         restoringCard.setupSnapshots(
@@ -146,8 +143,8 @@ private extension WispManager {
         cardRestoringSizeAnimator.addAnimations {[weak self] in
             self?.restoringCard.switchSnapshots()
             self?.restoringCard.transform = .identity
-            self?.restoringCard.layer.cornerRadius = context.configuration.initialCornerRadius
-            self?.restoringCard.layer.maskedCorners = context.configuration.initialMaskedCorner
+            self?.restoringCard.layer.cornerRadius = context.configuration.layout.initialCornerRadius
+            self?.restoringCard.layer.maskedCorners = context.configuration.layout.initialMaskedCorner
             currentWindow.layoutIfNeeded()
         }
         
