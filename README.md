@@ -77,31 +77,33 @@ wisp.present(secondVC, collectionView: myCollectionView, at: indexPath)
 
 WispConfiguration allows you to tweak the animation and layout behavior.
 
+From version **1.6.0**, `WispConfiguration` has been refactored to use a **DSL-based configuration style** for better readability, maintainability, and future extensibility.
+> For details, see the [WispConfiguration DSL Guide](./Documentation/WispConfiguration.md).
+
+### Quick Example
+
 ``` swift
-let config = WispConfiguration(
-    animationSpeed: .normal, // .fast, .normal, .slow
-    presentedAreaInset: .init(top: 20, leading: 0, bottom: 20, trailing: 0),
-    initialCornerRadius: 16,
-    finalCornerRadius: 0,
-    initialMaskedCorner: [.layerMinXMinYCorner, .layerMaxXMinYCorner],
-    finalMaskedCorner: [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-)
-
-wisp.present(secondVC, collectionView: myCollectionView, at: indexPath, configuration: config)
+let configuration = WispConfiguration { config in
+    // Animation configuration
+    config.setAnimation { animation in
+        animation.speed = .fast
+    }
+    
+    // Gesture configuration
+    config.setGesture { gesture in
+        gesture.allowedDirections = [.right, .down]
+    }
+    
+    // Layout configuration
+    config.setLayout { layout in
+        layout.presentedAreaInset = inset
+        layout.initialCornerRadius = 15
+        layout.finalCornerRadius = 30
+    }
+}
 ```
-All properties are optional and have default values.
 
-
-| Property | Type | Description |
-|:--:|:--:|:--:|
-|animationSpeed | .fast, .normal, .slow | Speed of the presentation animation |
-|presentedAreaInset|NSDirectionalEdgeInsets|The inset of the final presented view (default: .zero)|
-|initialCornerRadius|CGFloat|Corner radius at the beginning of animation|
-|finalCornerRadius|CGFloat|Corner radius when fully presented|
-|initialMaskedCorner|CACornerMask|Corners to apply rounding at start|
-|finalMaskedCorner|CACornerMask|Corners to apply rounding at end|
-
-For example, Use presentedAreaInset to customize the width and height of each card presented.
+For example, Use `presentedAreaInset` to customize the width and height of each card presented.
 
 | fullscreen | formSheet style | card | small pop up |
 |:--:|:--:|:--:|:--:|
