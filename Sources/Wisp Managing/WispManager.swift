@@ -64,7 +64,7 @@ private extension WispManager {
         restoringCell.alpha = 0
         card.frame = restoringCell.convert(
             restoringCell.contentView.frame,
-            to: context.sourceViewController?.view
+            to: context.collectionView
         )
         context.sourceViewController?.view.layoutIfNeeded()
     }
@@ -75,13 +75,20 @@ private extension WispManager {
         cardRestoringMovingAnimator.stopAnimation(false)
         cardRestoringMovingAnimator.finishAnimation(at: .current)
         
-        // addSubView
-        context.sourceViewController?.view.addSubview(restoringCard)
-        if let collectionView = context.collectionView {
-            context.sourceViewController?.view.insertSubview(restoringCard, aboveSubview: collectionView)
-        } else {
-            context.sourceViewController?.view.bringSubviewToFront(restoringCard)
+        // collectionView, 돌아가려는 셀이 존재하지 않는 경우
+        guard let collectionView = context.collectionView,
+              let targetCell = collectionView.cellForItem(at: context.indexPath)
+        else {
+            cancellables = []
+            context.collectionView?.makeSelectedCellVisible(indexPath: context.indexPath)
+            self.restoringCard.setStateAfterRestore()
+            self.restoringCard.transform = .identity
+            self.restoringCard.removeFromSuperview()
+            return
         }
+        
+        // addSubView
+        collectionView.addSubview(restoringCard)
         syncRestoringCardFrameToCell(restoringCard, context: context)
         
         // collection view scrolling subscribing
@@ -92,20 +99,11 @@ private extension WispManager {
         
         guard let currentWindow = context.sourceViewController?.view.window else { return }
         
-        // 돌아가려는 셀이 존재하지 않는 경우
-        guard let targetCell = context.collectionView?.cellForItem(at: context.indexPath) else {
-            cancellables = []
-            context.collectionView?.makeSelectedCellVisible(indexPath: context.indexPath)
-            self.restoringCard.setStateAfterRestore()
-            self.restoringCard.transform = .identity
-            self.restoringCard.removeFromSuperview()
-            return
-        }
-        
         // restoring card 초기 위치, 크기 설정 위한 사전 계산
-        let convertedCellFrame = targetCell.convert(targetCell.contentView.frame, to: currentWindow)
+        let convertedStartFrame = currentWindow.convert(startFrame, to: collectionView)
+        let convertedCellFrame = targetCell.convert(targetCell.contentView.frame, to: collectionView)
         let scaleT = getScaleT(startFrame: startFrame, endFrame: convertedCellFrame)
-        let distanceDiff = getDistanceDiff(startFrame: startFrame, endFrame: convertedCellFrame)
+        let distanceDiff = getDistanceDiff(startFrame: convertedStartFrame, endFrame: convertedCellFrame)
         
         // restoring card 초기 위치, 크기 설정
         restoringCard.center.x += distanceDiff.x
