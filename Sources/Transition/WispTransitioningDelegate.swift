@@ -66,4 +66,9 @@ internal final class WispTransitioningDelegate: NSObject, UIViewControllerTransi
         return self.presentationInteractor
     }
     
+    // MARK: - Dismissal Animator
+    func animationController(forDismissed dismissed: UIViewController) -> (any UIViewControllerAnimatedTransitioning)? {
+        return WispCardDismissalAnimator(context: context)
+    }
+    
 }
