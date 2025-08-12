@@ -21,14 +21,19 @@ internal final class WispCardDismissalAnimator: NSObject {
 extension WispCardDismissalAnimator: UIViewControllerAnimatedTransitioning {
     
     func transitionDuration(using transitionContext: (any UIViewControllerContextTransitioning)?) -> TimeInterval {
-        0.3
+        0.5
     }
     
     func animateTransition(using transitionContext: any UIViewControllerContextTransitioning) {
+        let containerView = transitionContext.containerView
         let fromView = transitionContext.view(forKey: .from)
-        context.collectionView?.cellForItem(at: context.indexPath)?.alpha = 1
-        UIView.animate(withDuration: transitionDuration(using: transitionContext)) {
-            fromView?.alpha = 0
+        
+        let topInset = context.configuration.layout.presentedAreaInset.top
+        
+        UIView.springAnimate(withDuration: transitionDuration(using: transitionContext)) { [weak self] in
+            guard let self else { return }
+            fromView?.superview?.frame.origin.y += (containerView.frame.height - topInset)
+            self.context.collectionView?.cellForItem(at: self.context.indexPath)?.alpha = 1
         } completion: { isFinished in
             transitionContext.completeTransition(isFinished)
         }
