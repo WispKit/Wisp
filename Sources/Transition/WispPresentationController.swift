@@ -78,8 +78,9 @@ internal class WispPresentationController: UIPresentationController {
     override func presentationTransitionDidEnd(_ completed: Bool) { }
     
     override func dismissalTransitionWillBegin() {
+        tapRecognizingBlurView.effect = nil
         blurAnimator.stopAnimation(true)
-        blurAnimator.fractionComplete = 0
+        blurAnimator.pausesOnCompletion = false
     }
     
     override func dismissalTransitionDidEnd(_ completed: Bool) { }
