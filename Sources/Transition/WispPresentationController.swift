@@ -132,7 +132,6 @@ private extension WispPresentationController {
             } else {
                 UIView.springAnimate(withDuration: 0.5, options: .allowUserInteraction) {
                     view.transform = .identity
-                    view.translatesAutoresizingMaskIntoConstraints = false
                     view.layoutIfNeeded()
                 }
             }
