@@ -53,6 +53,8 @@ extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
         let configuration = context.configuration
         let presentedAreaInset = context.configuration.layout.presentedAreaInset
         
+        // ⚠️ Switching back to Auto Layout here may cause safe area layout issues,
+        // especially when presenting view controllers with navigation bars.
         cardContainerView.translatesAutoresizingMaskIntoConstraints = true
         cardContainerView.frame = startFrame
         
