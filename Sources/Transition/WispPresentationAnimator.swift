@@ -47,39 +47,24 @@ extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
         }
         let wispView = wispVC.view!
         
-        cardContainerView.translatesAutoresizingMaskIntoConstraints = false
-        wispView.translatesAutoresizingMaskIntoConstraints = false
-        
         containerView.addSubview(cardContainerView)
         cardContainerView.addSubview(wispView)
         
         let configuration = context.configuration
         let presentedAreaInset = context.configuration.layout.presentedAreaInset
         
-        // Setting Initial Position
-        let topConstraint = cardContainerView.topAnchor.constraint(
-            equalTo: containerView.topAnchor,
-            constant: startFrame.minY
-        )
-        let leftConstraint = cardContainerView.leftAnchor.constraint(
-            equalTo: containerView.leftAnchor,
-            constant: startFrame.minX
-        )
-        let rightConstraint = cardContainerView.rightAnchor.constraint(
-            equalTo: containerView.rightAnchor,
-            constant: -(containerView.frame.width - startFrame.maxX)
-        )
-        let bottomConstraint = cardContainerView.bottomAnchor.constraint(
-            equalTo: containerView.bottomAnchor,
-            constant: -(containerView.frame.height - startFrame.maxY)
-        )
-        NSLayoutConstraint.activate([topConstraint, leftConstraint, rightConstraint, bottomConstraint,])
+        // ⚠️ Switching back to Auto Layout here may cause safe area layout issues,
+        // especially when presenting view controllers with navigation bars.
+        cardContainerView.translatesAutoresizingMaskIntoConstraints = true
+        cardContainerView.frame = startFrame
         
         let initialSize = startFrame.size
         let finalSize: CGSize = .init(
             width: containerView.frame.width - (presentedAreaInset.left + presentedAreaInset.right),
             height: containerView.frame.height - (presentedAreaInset.top + presentedAreaInset.bottom)
         )
+        
+        wispView.translatesAutoresizingMaskIntoConstraints = false
         let wispViewWidthConstraint = wispView.widthAnchor.constraint(equalToConstant: finalSize.width)
         let wispViewHeightConstraint = wispView.heightAnchor.constraint(equalToConstant: finalSize.height)
         wispViewWidthConstraint.isActive = true
@@ -105,10 +90,14 @@ extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
         
         animator.addAnimations { [weak self] in
             guard let self else { return }
-            topConstraint.constant = presentedAreaInset.top
-            leftConstraint.constant = presentedAreaInset.left
-            rightConstraint.constant = -presentedAreaInset.right
-            bottomConstraint.constant = -presentedAreaInset.bottom
+            guard let window = containerView.window else { return }
+            cardContainerView.frame = .init(
+                x: presentedAreaInset.left,
+                y: presentedAreaInset.top,
+                width: window.bounds.width - (presentedAreaInset.left + presentedAreaInset.right),
+                height: window.bounds.height - (presentedAreaInset.top + presentedAreaInset.bottom)
+            )
+            cardContainerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             
             self.cardContainerView.layer.cornerRadius = configuration.layout.finalCornerRadius
             self.cardContainerView.layer.maskedCorners = configuration.layout.finalMaskedCorner
