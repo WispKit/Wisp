@@ -128,7 +128,7 @@ private extension WispPresentationController {
                 (translation.y > 0.0))
             
             if shouldDismiss {
-                wispDismissableVC.dismissCard()
+                wispDismissableVC.dismissCard(withVelocity: velocity)
             } else {
                 UIView.springAnimate(withDuration: 0.5, options: .allowUserInteraction) {
                     view.transform = .identity
