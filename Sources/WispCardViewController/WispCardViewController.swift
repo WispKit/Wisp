@@ -91,7 +91,7 @@ extension WispCardViewController {
     private func dismissCard() {
         dragPanGesture.state = .cancelled
         
-        WispManager.shared.handleInteractiveDismissEnded(startFrame: rootView.card.frame)
+        WispManager.shared.handleInteractiveDismissEnded(startFrame: rootView.card.frame, initialVelocity: .zero)
         dismiss(animated: false)
         rootView.card.alpha = 0
         rootView.isHidden = true

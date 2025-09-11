@@ -14,23 +14,20 @@ import Combine
     static let shared = WispManager()
     private init() {}
     
-    private let cardRestoringSizeAnimator = UIViewPropertyAnimator(duration: 0.7, dampingRatio: 1)
-    private let cardRestoringMovingAnimator = UIViewPropertyAnimator(duration: 0.6, dampingRatio: 0.8)
-    
     let contextStackManager = WispContextStackManager()
     private let restoringCard = RestoringCard()
     private var cancellables: Set<AnyCancellable> = []
-    internal var currentContext: WispContext? {
+    var currentContext: WispContext? {
         contextStackManager.currentContext
     }
     
     var transitioningDelegate: WispTransitioningDelegate? = nil
     
-    func handleInteractiveDismissEnded(startFrame: CGRect) {
+    func handleInteractiveDismissEnded(startFrame: CGRect, initialVelocity: CGPoint) {
         guard let context = currentContext else { return }
         // 컬렉션뷰 구독 초기화
         cancellables = []
-        restore(startFrame: startFrame, using: consume context)
+        restore(startFrame: startFrame, initialVelocity: initialVelocity, using: consume context)
         contextStackManager.pop()
     }
     
@@ -69,12 +66,7 @@ private extension WispManager {
         context.sourceViewController?.view.layoutIfNeeded()
     }
     
-    func restore(startFrame: CGRect, using context: WispContext) {
-        cardRestoringSizeAnimator.stopAnimation(false)
-        cardRestoringSizeAnimator.finishAnimation(at: .current)
-        cardRestoringMovingAnimator.stopAnimation(false)
-        cardRestoringMovingAnimator.finishAnimation(at: .current)
-        
+    func restore(startFrame: CGRect, initialVelocity: CGPoint, using context: WispContext) {
         // collectionView, 돌아가려는 셀이 존재하지 않는 경우
         guard let collectionView = context.collectionView,
               let targetCell = collectionView.cellForItem(at: context.indexPath)
@@ -132,9 +124,20 @@ private extension WispManager {
         
         // ------ animation ------ //
         
+        let velocityVector = WispUtil.getRestorationInitialVelocity(
+            for: initialVelocity,
+            animatingDistance: distanceDiff.inverted()
+        )
+        let timingParameters = UISpringTimingParameters(dampingRatio: 0.8, initialVelocity: velocityVector)
+        let cardRestoringMovingAnimator = UIViewPropertyAnimator(duration: 0.6, timingParameters: timingParameters)
+        let cardRestoringSizeAnimator = UIViewPropertyAnimator(duration: 0.7, dampingRatio: 1)
+        
         cardRestoringMovingAnimator.addAnimations { [weak self] in
-            self?.restoringCard.center.x -= distanceDiff.x
-            self?.restoringCard.center.y -= distanceDiff.y
+            guard let self else { return }
+            var newCenter = self.restoringCard.center
+            newCenter.x -= distanceDiff.x
+            newCenter.y -= distanceDiff.y
+            self.restoringCard.center = newCenter
             currentWindow.layoutIfNeeded()
         }
         

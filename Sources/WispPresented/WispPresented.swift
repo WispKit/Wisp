@@ -10,14 +10,14 @@ import UIKit
 
 @MainActor public protocol WispPresented: UIViewController {
     
-    func dismissCard()
+    func dismissCard(withVelocity: CGPoint)
     
 }
 
 
 public extension WispPresented {
     
-    func dismissCard() {
+    func dismissCard(withVelocity initialVelocity: CGPoint = .zero) {
         // 배경 블러 없애기
         guard let presentationController = presentationController as? WispPresentationController else {
             return
@@ -37,10 +37,10 @@ public extension WispPresented {
             wispTransitioningDelegate.presentingAnimator.stopAnimation(false)
             wispTransitioningDelegate.presentingAnimator.finishAnimation(at: .current)
         }
-        startCardDismissing()
+        startCardDismissing(withVelocity: initialVelocity)
     }
     
-    private func startCardDismissing() {
+    private func startCardDismissing(withVelocity initialVelocity: CGPoint) {
         defer {
             dismiss(animated: false)
             view.alpha = 0
@@ -52,7 +52,7 @@ public extension WispPresented {
         guard let cardContainerView = view.superview else {
             return
         }
-        WispManager.shared.handleInteractiveDismissEnded(startFrame: cardContainerView.frame)
+        WispManager.shared.handleInteractiveDismissEnded(startFrame: cardContainerView.frame, initialVelocity: initialVelocity)
     }
     
 }
