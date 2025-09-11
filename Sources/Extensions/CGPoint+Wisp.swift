@@ -25,4 +25,8 @@ internal extension CGPoint {
         return gestures
     }
     
+    func inverted() -> CGPoint {
+        return CGPoint(x: -self.x, y: -self.y)
+    }
+    
 }
