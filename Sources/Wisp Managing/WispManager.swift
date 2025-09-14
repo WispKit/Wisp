@@ -113,10 +113,16 @@ private extension WispManager {
                                          startFrame.height / convertedCellFrame.height)
         restoringCard.layer.cornerRadius = context.configuration.layout.finalCornerRadius / cornerRadiusProportion
         
+        let cellRecentImage = UIGraphicsImageRenderer(bounds: targetCell.contentView.bounds).image { _ in
+            targetCell.contentView.drawHierarchy(in: targetCell.contentView.bounds, afterScreenUpdates: true)
+        }
+        let imageView = UIImageView(image: cellRecentImage)
+        imageView.backgroundColor = targetCell.backgroundColor
+        
         // restoring card snapshot 설정
         restoringCard.setupSnapshots(
             viewSnapshot: context.presentedSnapshot,
-            cellSnapshot: context.sourceCellSnapshot
+            cellSnapshot: imageView
         )
         
         // restoring card 초기 위치 확정
