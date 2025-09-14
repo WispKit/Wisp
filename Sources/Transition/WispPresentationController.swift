@@ -17,12 +17,6 @@ internal class WispPresentationController: UIPresentationController {
         }
     }
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
-    private let blurAnimator = UIViewPropertyAnimator(
-        duration: 2,
-        controlPoint1: .init(x: 0, y: 0.3),
-        controlPoint2: .init(x: 0.65, y: 0.23)
-    )
-    let tapRecognizingBlurView = UIVisualEffectView(effect: nil)
     private let cardContainerView: UIView
     private let wispDismissableVC: any WispPresented
     
@@ -40,7 +34,6 @@ internal class WispPresentationController: UIPresentationController {
             presentedViewController: self.wispDismissableVC,
             presenting: presentingViewController
         )
-        self.blurAnimator.pausesOnCompletion = true
         self.feedbackGenerator.prepare()
         
         dragPanGesture.delegate = self
@@ -48,40 +41,20 @@ internal class WispPresentationController: UIPresentationController {
     
     override func presentationTransitionWillBegin() {
         guard let containerView else { return }
-        containerView.addSubview(tapRecognizingBlurView)
-        tapRecognizingBlurView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            tapRecognizingBlurView.topAnchor.constraint(equalTo: containerView.topAnchor),
-            tapRecognizingBlurView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            tapRecognizingBlurView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            tapRecognizingBlurView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
-        ])
         containerView.layoutIfNeeded()
         
-        tapGesture.addTarget(self, action: #selector(containerBlurDidTapped))
-        tapRecognizingBlurView.addGestureRecognizer(tapGesture)
+        tapGesture.addTarget(self, action: #selector(containerViewDidTapped))
+        containerView.addGestureRecognizer(tapGesture)
         
         dragPanGesture.allowedScrollTypesMask = [.continuous]
         dragPanGesture.addTarget(self, action: #selector(dragPanGesturehandler))
         dragPanGesture.maximumNumberOfTouches = 1
         cardContainerView.addGestureRecognizer(dragPanGesture)
-        
-        blurAnimator.addAnimations { [weak self] in
-            self?.tapRecognizingBlurView.effect = UIBlurEffect(style: .regular)
-        }
-        blurAnimator.startAnimation()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            self?.blurAnimator.stopAnimation(true)
-        }
     }
     
     override func presentationTransitionDidEnd(_ completed: Bool) { }
     
-    override func dismissalTransitionWillBegin() {
-        tapRecognizingBlurView.effect = nil
-        blurAnimator.stopAnimation(true)
-        blurAnimator.pausesOnCompletion = false
-    }
+    override func dismissalTransitionWillBegin() { }
     
     override func dismissalTransitionDidEnd(_ completed: Bool) { }
     
@@ -91,9 +64,7 @@ internal class WispPresentationController: UIPresentationController {
 // MARK: - Gesture Recognizer Handling
 private extension WispPresentationController {
     
-    @objc func containerBlurDidTapped(_ sender: UITapGestureRecognizer) {
-        blurAnimator.stopAnimation(true)
-        tapRecognizingBlurView.effect = nil
+    @objc func containerViewDidTapped(_ sender: UITapGestureRecognizer) {
         wispDismissableVC.dismissCard()
     }
     

@@ -18,12 +18,6 @@ import UIKit
 public extension WispPresented {
     
     func dismissCard(withVelocity initialVelocity: CGPoint = .zero) {
-        // 배경 블러 없애기
-        guard let presentationController = presentationController as? WispPresentationController else {
-            return
-        }
-        presentationController.tapRecognizingBlurView.effect = nil
-        
         if isBeingPresented {
             guard
                 let wispTransitioningDelegate = transitioningDelegate as? WispTransitioningDelegate
