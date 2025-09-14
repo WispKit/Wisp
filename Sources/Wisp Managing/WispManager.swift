@@ -15,7 +15,6 @@ import Combine
     private init() {}
     
     let contextStackManager = WispContextStackManager()
-    private let restoringCard = RestoringCard()
     private var cancellables: Set<AnyCancellable> = []
     var currentContext: WispContext? {
         contextStackManager.currentContext
@@ -67,27 +66,31 @@ private extension WispManager {
     }
     
     func restore(startFrame: CGRect, initialVelocity: CGPoint, using context: WispContext) {
+        let restoringCard = RestoringCard()
         // collectionView, 돌아가려는 셀이 존재하지 않는 경우
         guard let collectionView = context.collectionView,
               let targetCell = collectionView.cellForItem(at: context.indexPath)
         else {
             cancellables = []
             context.collectionView?.makeSelectedCellVisible(indexPath: context.indexPath)
-            self.restoringCard.setStateAfterRestore()
-            self.restoringCard.transform = .identity
-            self.restoringCard.removeFromSuperview()
+            restoringCard.setStateAfterRestore()
+            restoringCard.transform = .identity
+            restoringCard.removeFromSuperview()
             return
         }
         
         // addSubView
         collectionView.addSubview(restoringCard)
+        collectionView.bringSubviewToFront(restoringCard)
         syncRestoringCardFrameToCell(restoringCard, context: context)
         
-        // collection view scrolling subscribing
-        context.collectionView?.scrollDetected.sink { [weak self] _ in
-            guard let self else { return }
-            self.syncRestoringCardFrameToCell(self.restoringCard, context: context)
-        }.store(in: &cancellables)
+        // collection view scrolling(including orthogonal scrolling) subscribing
+        let cancellable = context.collectionView?.scrollDetected
+            .sink { [weak self] _ in
+                guard let self else { return }
+                self.syncRestoringCardFrameToCell(restoringCard, context: context)
+            }
+        cancellable?.store(in: &cancellables)
         
         guard let currentWindow = context.sourceViewController?.view.window else { return }
         
@@ -132,29 +135,30 @@ private extension WispManager {
         let cardRestoringMovingAnimator = UIViewPropertyAnimator(duration: 0.6, timingParameters: timingParameters)
         let cardRestoringSizeAnimator = UIViewPropertyAnimator(duration: 0.7, dampingRatio: 1)
         
-        cardRestoringMovingAnimator.addAnimations { [weak self] in
-            guard let self else { return }
-            var newCenter = self.restoringCard.center
+        cardRestoringMovingAnimator.addAnimations {
+            var newCenter = restoringCard.center
             newCenter.x -= distanceDiff.x
             newCenter.y -= distanceDiff.y
-            self.restoringCard.center = newCenter
+            restoringCard.center = newCenter
             currentWindow.layoutIfNeeded()
         }
         
-        cardRestoringSizeAnimator.addAnimations {[weak self] in
-            self?.restoringCard.switchSnapshots()
-            self?.restoringCard.transform = .identity
-            self?.restoringCard.layer.cornerRadius = context.configuration.layout.initialCornerRadius
-            self?.restoringCard.layer.maskedCorners = context.configuration.layout.initialMaskedCorner
+        cardRestoringSizeAnimator.addAnimations {
+            restoringCard.switchSnapshots()
+            restoringCard.transform = .identity
+            restoringCard.layer.cornerRadius = context.configuration.layout.initialCornerRadius
+            restoringCard.layer.maskedCorners = context.configuration.layout.initialMaskedCorner
             currentWindow.layoutIfNeeded()
         }
         
         cardRestoringSizeAnimator.addCompletion { [weak self] stoppedPosition in
-            self?.restoringCard.setStateAfterRestore()
+            restoringCard.setStateAfterRestore()
             context.collectionView?.makeSelectedCellVisible(indexPath: context.indexPath)
-            self?.restoringCard.transform = .identity
-            self?.restoringCard.removeFromSuperview()
-            self?.cancellables = []
+            restoringCard.transform = .identity
+            restoringCard.removeFromSuperview()
+            if let cancellable {
+                self?.cancellables.remove(cancellable)
+            }
         }
         
         cardRestoringMovingAnimator.startAnimation()
