@@ -21,6 +21,8 @@ internal class WispPresentationController: UIPresentationController {
     private let wispDismissableVC: any WispPresented
     
     private let tapGesture = UITapGestureRecognizer()
+    private let tapRecognizingView = UIView()
+    
     let dragPanGesture = UIPanGestureRecognizer()
     
     init(
@@ -41,10 +43,18 @@ internal class WispPresentationController: UIPresentationController {
     
     override func presentationTransitionWillBegin() {
         guard let containerView else { return }
+        containerView.addSubview(tapRecognizingView)
+        tapRecognizingView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            tapRecognizingView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            tapRecognizingView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            tapRecognizingView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            tapRecognizingView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+        ])
         containerView.layoutIfNeeded()
         
         tapGesture.addTarget(self, action: #selector(containerViewDidTapped))
-        containerView.addGestureRecognizer(tapGesture)
+        tapRecognizingView.addGestureRecognizer(tapGesture)
         
         dragPanGesture.allowedScrollTypesMask = [.continuous]
         dragPanGesture.addTarget(self, action: #selector(dragPanGesturehandler))
