@@ -12,7 +12,6 @@ import UIKit
 class WispCardViewController: UIViewController {
     
     let rootView: WispCardView
-    private let tapGesture = UITapGestureRecognizer()
     private let dragPanGesture = UIPanGestureRecognizer()
     
     init(
@@ -42,7 +41,6 @@ class WispCardViewController: UIViewController {
 extension WispCardViewController {
     
     private func setupGestures() {
-        tapGesture.addTarget(self, action: #selector(backgroundBlurTapped))
         dragPanGesture.addTarget(self, action: #selector(dragPanGesturehandler))
         dragPanGesture.allowedScrollTypesMask = [.continuous]
         
