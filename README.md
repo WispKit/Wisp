@@ -21,7 +21,7 @@
 
 | Intuitive Drag Interaction | Tap to Dismiss |
 |:--:|:--:|
-|<img src="https://github.com/user-attachments/assets/de41bad1-a288-455f-85c8-6c2d18dacbe1" width=200> |  <img src="https://github.com/user-attachments/assets/23140aed-2abd-4cb4-a29e-23d4893e1e0e" width=200>|
+|<img src="https://github.com/user-attachments/assets/22d76600-628c-4f38-964b-68192578e99e" width=200> |  <img src="https://github.com/user-attachments/assets/9d2241fa-ebe9-4823-95cc-2701b56ee47f" width=200>|
 
 ---
 
@@ -108,7 +108,7 @@ For example, Use `presentedAreaInset` to customize the width and height of each 
 
 | fullscreen | formSheet style | card | small pop up |
 |:--:|:--:|:--:|:--:|
-| <img src="https://github.com/user-attachments/assets/dcbbc640-c7a1-439f-ba62-9c73e09b8c9b" width=130> | <img src="https://github.com/user-attachments/assets/0564c85f-9a09-4d3c-91be-8aaa83c29035" width=130> | <img src="https://github.com/user-attachments/assets/6d55a707-df20-46da-9211-3183461d7f85" width=130>  |  <img src="https://github.com/user-attachments/assets/ea68d539-889a-4017-b1ed-a6e29ec5d3df" width=130> |
+| <img src="https://github.com/user-attachments/assets/ae85c010-fa94-40e6-bb61-0f834f3de4fb" width=130> | <img src="https://github.com/user-attachments/assets/99e50638-317d-456a-8e3e-11707eda2876" width=130> | <img src="https://github.com/user-attachments/assets/6a3ee01b-cd2d-4fc1-a16a-ba1c3db11b9b" width=130>  |  <img src="https://github.com/user-attachments/assets/f888ae8c-5777-45c8-a807-fd5627b5e6f2" width=130> |
 
 
 ## 📌 Requirements
