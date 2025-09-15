@@ -15,11 +15,11 @@ internal protocol CustomCompositionalLayoutDelegate: AnyObject {
 
 
 // section 정보를 받아와서 스크롤을 추척 (delegate method 호출)
-internal class WispCompositionalLayout: UICollectionViewCompositionalLayout {
+public class WispCompositionalLayout: UICollectionViewCompositionalLayout {
 
-    weak var delegate: (any CustomCompositionalLayoutDelegate)?
+    internal weak var delegate: (any CustomCompositionalLayoutDelegate)?
     
-    override public init(
+    internal override init(
         sectionProvider: @escaping UICollectionViewCompositionalLayoutSectionProvider
     ) {
         
@@ -37,7 +37,7 @@ internal class WispCompositionalLayout: UICollectionViewCompositionalLayout {
         })
     }
     
-    override public init(
+    internal override init(
         sectionProvider: @escaping UICollectionViewCompositionalLayoutSectionProvider,
         configuration: UICollectionViewCompositionalLayoutConfiguration
     ) {
@@ -54,7 +54,7 @@ internal class WispCompositionalLayout: UICollectionViewCompositionalLayout {
         )
     }
 
-    override init(section: NSCollectionLayoutSection) {
+    internal override init(section: NSCollectionLayoutSection) {
         let originalHandler = section.visibleItemsInvalidationHandler
         section.visibleItemsInvalidationHandler = { visibleItems, contentOffset, environment in
             originalHandler?(visibleItems, contentOffset, environment)
@@ -66,7 +66,7 @@ internal class WispCompositionalLayout: UICollectionViewCompositionalLayout {
         super.init(section: section)
     }
     
-    override init(
+    internal override init(
         section: NSCollectionLayoutSection,
         configuration: UICollectionViewCompositionalLayoutConfiguration
     ) {
