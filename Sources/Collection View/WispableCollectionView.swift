@@ -19,14 +19,14 @@ open class WispableCollectionView: UICollectionView {
         sectionProvider: @escaping UICollectionViewCompositionalLayoutSectionProvider,
         configuration: UICollectionViewCompositionalLayoutConfiguration? = nil
     ) {
-        let customLayout: CustomCompositionalLayout
+        let customLayout: WispCompositionalLayout
         if let configuration {
-            customLayout = CustomCompositionalLayout(
+            customLayout = WispCompositionalLayout(
                 sectionProvider: sectionProvider,
                 configuration: configuration
             )
         } else {
-            customLayout = CustomCompositionalLayout(sectionProvider: sectionProvider)
+            customLayout = WispCompositionalLayout(sectionProvider: sectionProvider)
         }
         super.init(frame: frame, collectionViewLayout: customLayout)
         customLayout.delegate = self
@@ -39,11 +39,11 @@ open class WispableCollectionView: UICollectionView {
         section: NSCollectionLayoutSection,
         configuration: UICollectionViewCompositionalLayoutConfiguration? = nil
     ) {
-        let customLayout: CustomCompositionalLayout
+        let customLayout: WispCompositionalLayout
         if let configuration {
-            customLayout = CustomCompositionalLayout(section: section, configuration: configuration)
+            customLayout = WispCompositionalLayout(section: section, configuration: configuration)
         } else {
-            customLayout = CustomCompositionalLayout(section: section)
+            customLayout = WispCompositionalLayout(section: section)
         }
         super.init(frame: frame, collectionViewLayout: customLayout)
         customLayout.delegate = self

@@ -14,7 +14,7 @@ public extension UICollectionView {
         frame: CGRect = .zero,
         sectionProvider: @escaping UICollectionViewCompositionalLayoutSectionProvider,
     ) -> UICollectionView {
-        let customLayout = CustomCompositionalLayout(sectionProvider: sectionProvider)
+        let customLayout = WispCompositionalLayout(sectionProvider: sectionProvider)
         let collectionView = UICollectionView(frame: frame, collectionViewLayout: customLayout)
         return collectionView
     }
@@ -24,7 +24,7 @@ public extension UICollectionView {
         frame: CGRect = .zero,
         section: NSCollectionLayoutSection,
     ) -> UICollectionView {
-        let customLayout = CustomCompositionalLayout(section: section)
+        let customLayout = WispCompositionalLayout(section: section)
         let collectionView = UICollectionView(frame: frame, collectionViewLayout: customLayout)
         return collectionView
     }
