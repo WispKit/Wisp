@@ -19,6 +19,11 @@ public class WispCompositionalLayout: UICollectionViewCompositionalLayout {
 
     internal weak var delegate: (any CustomCompositionalLayoutDelegate)?
     
+    @available(*, unavailable, message: "Direct initialization of `WispCompositionalLayout` is not supported. Please use a static method such as `UICollectionViewCompositionalLayout.wisp.make(...)`.")
+    private init() {
+        fatalError("Direct initialization of `WispCompositionalLayout` is not supported. Please use a static method such as `UICollectionViewCompositionalLayout.wisp.make(...)`.")
+    }
+    
     internal override init(
         sectionProvider: @escaping UICollectionViewCompositionalLayoutSectionProvider
     ) {
