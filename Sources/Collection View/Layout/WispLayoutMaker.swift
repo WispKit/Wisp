@@ -29,6 +29,9 @@ public protocol WispLayoutMakerType {
         configuration: UICollectionViewCompositionalLayoutConfiguration
     ) -> WispCompositionalLayout
     
+    @MainActor
+    func list(using configuration: UICollectionLayoutListConfiguration) -> WispCompositionalLayout
+    
 }
 
 
@@ -61,6 +64,11 @@ internal struct WispLayoutMaker: WispLayoutMakerType {
         configuration: UICollectionViewCompositionalLayoutConfiguration
     ) -> WispCompositionalLayout {
         return WispCompositionalLayout(sectionProvider: sectionProvider, configuration: configuration)
+    }
+    
+    @MainActor
+    public func list(using configuration: UICollectionLayoutListConfiguration) -> WispCompositionalLayout {
+        return WispCompositionalLayout._list(using: configuration)
     }
     
 }

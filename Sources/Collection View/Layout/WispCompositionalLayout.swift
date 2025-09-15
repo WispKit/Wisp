@@ -16,7 +16,22 @@ internal protocol CustomCompositionalLayoutDelegate: AnyObject {
 
 // section 정보를 받아와서 스크롤을 추척 (delegate method 호출)
 public class WispCompositionalLayout: UICollectionViewCompositionalLayout {
-
+    
+    /// If this layout was created via `._ist(using:)`, `backingListLayout` holds the
+    /// `UICollectionViewCompositionalLayout` returned by `UICollectionViewCompositionalLayout.list(using:)`.
+    ///
+    /// - When `backingLayout` is non-nil (the list case), the collection view uses that backing list layout for actual rendering.
+    ///   In this mode `WispCompositionalLayout` acts as a wrapper:
+    ///   rendering is delegated to `backingListLayout`, while Wisp still provides scroll-detection
+    ///   and delegate forwarding behavior.
+    ///
+    /// - When `backingListLayout` is nil (the normal, non-list case), the collection view uses
+    ///   `WispCompositionalLayout` itself for rendering, and Wisp's internal hooks
+    ///   (e.g. visible-items invalidation handlers) are applied directly to the section(s).
+    ///
+    /// This property is internal and managed by Wisp; consumers should not modify it.
+    internal var backingListLayout: UICollectionViewCompositionalLayout? = nil
+    
     internal weak var delegate: (any CustomCompositionalLayoutDelegate)?
     
     @available(*, unavailable, message: "Direct initialization of `WispCompositionalLayout` is not supported. Please use a static method such as `UICollectionViewCompositionalLayout.wisp.make(...)`.")
@@ -86,6 +101,11 @@ public class WispCompositionalLayout: UICollectionViewCompositionalLayout {
         super.init(section: section, configuration: configuration)
     }
     
+    internal static func _list(using configuration: UICollectionLayoutListConfiguration) -> WispCompositionalLayout {
+        let wispLayout = WispCompositionalLayout.dummy
+        wispLayout.backingListLayout = self.list(using: configuration)
+        return wispLayout
+    }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -101,4 +121,18 @@ public class WispCompositionalLayout: UICollectionViewCompositionalLayout {
 }
 
 
-
+private extension WispCompositionalLayout {
+    
+    /// A placeholder `WispCompositionalLayout` instance used only for initialization purposes.
+    /// This layout itself is never used for rendering; the actual rendering is delegated to `backingListLayout`.
+    static var dummy: WispCompositionalLayout {
+        let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .absolute(.zero), heightDimension: .absolute(.zero)))
+        let group = NSCollectionLayoutGroup.horizontal(
+            layoutSize: .init(widthDimension: .absolute(.zero), heightDimension: .absolute(.zero)),
+            subitems: [item]
+        )
+        let section = NSCollectionLayoutSection(group: group)
+        return WispCompositionalLayout(section: section)
+    }
+    
+}

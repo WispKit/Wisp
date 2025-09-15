@@ -5,16 +5,15 @@
 //  Created by 김민성 on 7/26/25.
 //
 
-import UIKit
-
 import Combine
+import UIKit
 
 open class WispableCollectionView: UICollectionView {
     
     private(set) var scrollDetected: PassthroughSubject<Void, Never> = .init()
     
     public init(frame: CGRect, collectionViewLayout layout: WispCompositionalLayout) {
-        super.init(frame: frame, collectionViewLayout: layout)
+        super.init(frame: frame, collectionViewLayout: layout.backingListLayout ?? layout)
         layout.delegate = self
     }
     
