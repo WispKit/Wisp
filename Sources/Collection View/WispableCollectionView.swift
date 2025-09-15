@@ -5,45 +5,49 @@
 //  Created by 김민성 on 7/26/25.
 //
 
-import UIKit
-
 import Combine
+import UIKit
 
 open class WispableCollectionView: UICollectionView {
     
     private(set) var scrollDetected: PassthroughSubject<Void, Never> = .init()
     
-    // 여러 섹션을 이용하는 경우. (sectionProvider 사용)
+    public init(frame: CGRect, collectionViewLayout layout: WispCompositionalLayout) {
+        super.init(frame: frame, collectionViewLayout: layout.backingListLayout ?? layout)
+        layout.delegate = self
+    }
+    
+    @available(*, deprecated, message: "\nPlease use `init(frame:collectionViewLayout:)`.")
     public init(
         frame: CGRect,
         sectionProvider: @escaping UICollectionViewCompositionalLayoutSectionProvider,
         configuration: UICollectionViewCompositionalLayoutConfiguration? = nil
     ) {
-        let customLayout: CustomCompositionalLayout
+        let customLayout: WispCompositionalLayout
         if let configuration {
-            customLayout = CustomCompositionalLayout(
+            customLayout = WispCompositionalLayout(
                 sectionProvider: sectionProvider,
                 configuration: configuration
             )
         } else {
-            customLayout = CustomCompositionalLayout(sectionProvider: sectionProvider)
+            customLayout = WispCompositionalLayout(sectionProvider: sectionProvider)
         }
         super.init(frame: frame, collectionViewLayout: customLayout)
         customLayout.delegate = self
     }
     
     
-    // 단일 섹션을 이용하는 경우.
+    @available(*, deprecated, message: "\nPlease use `init(frame:collectionViewLayout:)`.")
     public init(
         frame: CGRect,
         section: NSCollectionLayoutSection,
         configuration: UICollectionViewCompositionalLayoutConfiguration? = nil
     ) {
-        let customLayout: CustomCompositionalLayout
+        let customLayout: WispCompositionalLayout
         if let configuration {
-            customLayout = CustomCompositionalLayout(section: section, configuration: configuration)
+            customLayout = WispCompositionalLayout(section: section, configuration: configuration)
         } else {
-            customLayout = CustomCompositionalLayout(section: section)
+            customLayout = WispCompositionalLayout(section: section)
         }
         super.init(frame: frame, collectionViewLayout: customLayout)
         customLayout.delegate = self
@@ -52,9 +56,6 @@ open class WispableCollectionView: UICollectionView {
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    // list configuration
-    
     
 }
 

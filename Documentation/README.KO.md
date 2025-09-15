@@ -21,55 +21,92 @@
 |<img src="https://github.com/user-attachments/assets/22d76600-628c-4f38-964b-68192578e99e" width=200> |  <img src="https://github.com/user-attachments/assets/9d2241fa-ebe9-4823-95cc-2701b56ee47f" width=200>|
 ---
 
-# ⬇️ 설치
+## ⬇️ 설치
 
 Wisp는 [Swift Package Manager](https://swift.org/package-manager/)를 통해 설치할 수 있습니다:
 
 1. Xcode project 열기.
 2. **File > Add Package Dependencies...** 로 이동
-3. package URL 입력: `https://github.com/nolanMinsung/Wisp.git`
+3. package URL 입력: `https://github.com/WispKit/Wisp.git`
 4. 버전 선택 후 `Target`에 추가
 
 
-## 🚀 어떻게 사용하나요?
+## 🚀 사용 방법
 
-### 아주 간단합니다! 단 몇 줄의 코드면 충분합니다.
-#### 1.	UICollectionView 대신 `WispableCollectionView` 를 사용합니다. 
-#### 2.	그리고 나서 UIViewController에서 필요한 코드는 단 한 줄입니다.
+### 1. WispableCollectionView 생성하기
+`UICollectionView`와 거의 동일하지만, `UICollectionViewLayout` 대신 `WispCompositionalLayout`을 받습니다. 
 
-WispableCollectionView는 다음과 같이 compositional layout의 section 정보를 사용하여 초기화합니다.
-``` swift
+```swift
 import Wisp
 
-// ...
+let layout = UICollectionViewCompositionalLayout.wisp.make { sectionIndex, layoutEnvironment in
+    // return your NSCollectionLayoutSection here
+}
+
 let myCollectionView = WispableCollectionView(
     frame: .zero,
-    sectionProvider: { sectionIndex, layoutEnvironment in
-        // your compositional layout section Info here
-    }
+    collectionViewLayout: layout
 )
-// ...
 ```
-하나의 섹션만을 사용하여 초기화하는 경우에는 다음과 같이 사용할 수 있습니다:
+
+단일 섹션 레이아웃의 경우:
 ``` swift
 // ...
 let myCollectionView = WispableCollectionView(
     frame: .zero,
-    section: {
-        // your compositional layout section
+    collectionViewLayout: UICollectionViewCompositionalLayout.wisp.make {
+        // return your NSCollectionLayoutSection here
     }
 )
 // ...
 ```
 
-그리고 나서 전환을 실행할 뷰컨트롤러에서, 다음과 같이 한 줄만 적으면 됩니다:
+혹은 더 간단히 이렇게 작성할 수도 있습니다:
+``` swift
+// 다중 섹션 레이아웃
+let myCollectionView = WispableCollectionView(
+    frame: .zero,
+    collectionViewLayout: .wisp.make { sectionIndex, layoutEnvironment in
+        // return your NSCollectionLayoutSection here
+    }
+)
+
+// 단일 섹션 레이아웃
+let myCollectionView = WispableCollectionView(
+    frame: .zero,
+    collectionViewLayout: .wisp.make {
+        // return your NSCollectionLayoutSection here
+    }
+)
+```
+
+### 2. UIKit의 내장 리스트 레이아웃 사용하기
+UIKit의 리스트 스타일 레이아웃이 필요하다면 간단히 이렇게 호출하세요:
+
+``` swift
+let myListView = WispableCollectionView(
+    frame: .zero,
+    collectionViewLayout: UICollectionViewCompositionalLayout.wisp.list(using: .plain)
+)
+```
+혹은 더 간단히:
+``` swift
+let myListView = WispableCollectionView(frame: .zero, collectionViewLayout: .wisp.list(using: .plain))
+```
+
+### 3. wisp.present로 화면 전환하기
+추가 delegate 설정은 필요 없습니다. 한 줄이면 동작합니다!
 
 ``` swift
 let secondVC = MyViewController()
 wisp.present(secondVC, collectionView: myCollectionView, at: indexPath)
-// ⚠️ Note: The collection view는 present되는 view controller의 subview여야 합니다.
+// ⚠️ Note: The collection view must be a subview of the presenting view controller.
 ```
-### ✅ 이게 전부입니다! 복잡한 delegate나, 커스텀 트랜지션 설정은 필요하지 않습니다. 말 그대로, 그냥 동작해요.
+
+### ✅ 끝!
+- UICollectionView와 친숙한 API
+- 커스텀 레이아웃 또는 리스트 레이아웃을 간단하게 생성
+- 번거로움 없는 매끄러운 화면 전환
 
 ## ⚙️ Configuration
 
@@ -77,7 +114,7 @@ wisp.present(secondVC, collectionView: myCollectionView, at: indexPath)
 `WispConfiguration`을 통해 커스텀 설정을 할 수 있습니다.
 ## WispConfiguration (v1.3.0)
 
-버전 **1.3.0**부터 `WispConfiguration`이 **DSL 기반 구성 방식**으로 리팩터링되었습니다.  
+버전 **1.3.0**부터 `WispConfiguration`이 **DSL 기반 구성 방식**으로 리팩토링되었습니다.  
 이로 인해 코드 가독성, 유지보수성, 확장성이 개선되었습니다.
 
 > 자세한 내용은 [WispConfiguration DSL 가이드](./WispConfiguration.md)를 참고하세요.
