@@ -120,7 +120,7 @@ private extension WispManager {
             targetCell.contentView.drawHierarchy(in: targetCell.contentView.bounds, afterScreenUpdates: true)
         }
         let imageView = UIImageView(image: cellRecentImage)
-        imageView.backgroundColor = targetCell.backgroundColor
+        imageView.backgroundColor = targetCell.backgroundConfiguration?.backgroundColor ?? targetCell.backgroundColor
         
         // restoring card snapshot 설정
         restoringCard.setupSnapshots(
