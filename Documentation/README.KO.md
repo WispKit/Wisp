@@ -103,6 +103,31 @@ wisp.present(secondVC, collectionView: myCollectionView, at: indexPath)
 // ⚠️ Note: The collection view must be a subview of the presenting view controller.
 ```
 
+### 4. Dismiss 동작
+기본적으로 wisp로 present된 뷰컨트롤러는 드래그 제스처(pan gesture) 또는 배경을 탭하는 것으로 dismiss할 수 있습니다.
+하지만, 개발자가 원하는 시점에 명시적으로 dismiss를 하고 싶다면, 다음과 같이 public API를 호출할 수 있습니다:
+
+``` swift
+// present된 뷰컨트롤러 내부에서 스스로 dismiss하는 경우
+self.wisp.dismiss(to: IndexPath(item: 0, section: 0), animated: true)
+```
+
+### 5. Dismiss 함수 시그니처
+``` swift
+func dismiss(
+    to indexPath: IndexPath? = nil,
+    animated: Bool = true
+)
+```
+indexPath가 nil인 경우, 처음 present될 때 사용한 원래 indexPath로 wisp가 dismiss를 시도합니다.
+dismiss 시점에 다른 indexPath로 되돌아가야 한다면, to 매개변수에 원하는 indexPath를 넣어주면 됩니다.
+
+예시:
+``` swift
+// 처음 present된 셀과는 다른 셀로 dismiss하기
+self.wisp.dismiss(to: IndexPath(item: 5, section: 0), animated: true)
+```
+
 ### ✅ 끝!
 - UICollectionView와 친숙한 API
 - 커스텀 레이아웃 또는 리스트 레이아웃을 간단하게 생성

@@ -19,7 +19,7 @@ internal final class WispTransitioningDelegate: NSObject, UIViewControllerTransi
     private let cardContainerView = UIView()
     private let presentationInteractor = UIPercentDrivenInteractiveTransition()
     private var startCellFrame: CGRect {
-        guard let selectedCell = context.collectionView?.cellForItem(at: context.indexPath) else {
+        guard let selectedCell = context.collectionView?.cellForItem(at: context.sourceIndexPath) else {
             fatalError()
         }
         return selectedCell.convert(selectedCell.contentView.frame, to: nil)
@@ -38,7 +38,7 @@ internal final class WispTransitioningDelegate: NSObject, UIViewControllerTransi
         source: UIViewController
     ) -> UIPresentationController? {
         return WispPresentationController(
-            presentedViewController: presented as WispPresented,
+            presentedViewController: presented,
             presenting: presenting,
             cardContainerView: cardContainerView
         )

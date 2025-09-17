@@ -106,6 +106,32 @@ let secondVC = MyViewController()
 wisp.present(secondVC, collectionView: myCollectionView, at: indexPath)
 // ⚠️ Note: The collection view must be a subview of the presenting view controller.
 ```
+
+### 4. Dismiss Behavior
+By default, a wisp-presented view controller can be dismissed with a drag gesture (pan gesture) or by tapping the background.
+However, if you want to dismiss explicitly at a specific moment in your code, you can call the public API:
+
+``` swift
+// Inside the presented view controller
+self.wisp.dismiss(to: IndexPath(item: 0, section: 0), animated: true)
+```
+#### 5. Dismiss API Signature
+
+``` swift
+func dismiss(
+    to indexPath: IndexPath? = nil,
+    animated: Bool = true
+)
+```
+If indexPath is nil, the view will try to use the original indexPath used at the time of presentation.
+If you want the view to dismiss to a different indexPath, just provide it in the to parameter.
+
+Example:
+``` swift
+// Dismiss to a different cell than the one originally presented from
+self.wisp.dismiss(to: IndexPath(item: 5, section: 0), animated: true)
+```
+
 ### ✅ That’s it!
 - Familiar API, just like UICollectionView
 - Simple creation of custom or list layouts

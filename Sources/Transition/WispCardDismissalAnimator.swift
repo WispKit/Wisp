@@ -33,7 +33,7 @@ extension WispCardDismissalAnimator: UIViewControllerAnimatedTransitioning {
         UIView.springAnimate(withDuration: transitionDuration(using: transitionContext)) { [weak self] in
             guard let self else { return }
             fromView?.superview?.frame.origin.y += (containerView.frame.height - topInset)
-            self.context.collectionView?.cellForItem(at: self.context.indexPath)?.alpha = 1
+            self.context.collectionView?.cellForItem(at: self.context.sourceIndexPath)?.alpha = 1
         } completion: { isFinished in
             transitionContext.completeTransition(isFinished)
         }
