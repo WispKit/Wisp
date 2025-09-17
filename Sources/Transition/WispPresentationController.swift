@@ -18,7 +18,7 @@ internal class WispPresentationController: UIPresentationController {
     }
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
     private let cardContainerView: UIView
-    internal let wispDismissableVC: any WispPresented
+    internal let wispDismissableVC: UIViewController
     
     private let tapGesture = UITapGestureRecognizer()
     private let tapRecognizingView = UIView()
@@ -26,7 +26,7 @@ internal class WispPresentationController: UIPresentationController {
     let dragPanGesture = UIPanGestureRecognizer()
     
     init(
-        presentedViewController: any WispPresented,
+        presentedViewController: UIViewController,
         presenting presentingViewController: UIViewController?,
         cardContainerView: UIView
     ) {

@@ -23,7 +23,7 @@ public final class WispPresenter {
 public extension WispPresenter {
     
     @MainActor func present(
-        _ viewControllerToPresent: some WispPresented,
+        _ viewControllerToPresent: UIViewController,
         collectionView: WispableCollectionView,
         at indexPath: IndexPath,
         configuration: WispConfiguration = .default
