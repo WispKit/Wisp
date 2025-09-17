@@ -54,7 +54,9 @@ private extension WispManager {
         _ card: RestoringCard,
         context: WispContext
     ) {
-        guard let restoringCell = context.collectionView?.cellForItem(at: context.indexPath) else {
+        guard let destinationIndexPath = context.destinationIndexPath,
+              let restoringCell = context.collectionView?.cellForItem(at: destinationIndexPath)
+        else {
             return
         }
         restoringCell.alpha = 0
@@ -69,14 +71,20 @@ private extension WispManager {
         let restoringCard = RestoringCard()
         // collectionView, 돌아가려는 셀이 존재하지 않는 경우
         guard let collectionView = context.collectionView,
-              let targetCell = collectionView.cellForItem(at: context.indexPath)
+              let destinationIndexPath = context.destinationIndexPath,
+              let targetCell = collectionView.cellForItem(at: destinationIndexPath)
         else {
             cancellables = []
-            context.collectionView?.makeSelectedCellVisible(indexPath: context.indexPath)
+            context.collectionView?.makeSelectedCellVisible(indexPath: context.sourceIndexPath)
             restoringCard.setStateAfterRestore()
             restoringCard.transform = .identity
             restoringCard.removeFromSuperview()
             return
+        }
+        
+        if context.isIndexPathChanged {
+            collectionView.makeSelectedCellInvisible(indexPath: destinationIndexPath)
+            collectionView.makeSelectedCellVisible(indexPath: context.sourceIndexPath)
         }
         
         // addSubView
@@ -159,7 +167,7 @@ private extension WispManager {
         
         cardRestoringSizeAnimator.addCompletion { [weak self] stoppedPosition in
             restoringCard.setStateAfterRestore()
-            context.collectionView?.makeSelectedCellVisible(indexPath: context.indexPath)
+            context.collectionView?.makeSelectedCellVisible(indexPath: destinationIndexPath)
             restoringCard.transform = .identity
             restoringCard.removeFromSuperview()
             if let cancellable {

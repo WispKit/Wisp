@@ -24,7 +24,7 @@ public extension WispPresented {
             else {
                 dismiss(animated: true) {
                     guard let context = WispManager.shared.currentContext else { return }
-                    context.collectionView?.cellForItem(at: context.indexPath)?.alpha = 1
+                    context.collectionView?.makeSelectedCellVisible(indexPath: context.sourceIndexPath)
                 }
                 return
             }

@@ -126,7 +126,7 @@ extension WispPresentationAnimator: UIViewControllerAnimatedTransitioning {
         // 그래서 처음에는 그냥 자동으로 애니메이션이 실행되도록 구현함.
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
-            self.context.collectionView?.cellForItem(at: self.context.indexPath)?.alpha = 0
+            self.context.collectionView?.cellForItem(at: self.context.sourceIndexPath)?.alpha = 0
             self.interactor.finish()
         }
         

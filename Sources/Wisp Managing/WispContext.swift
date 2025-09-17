@@ -12,10 +12,13 @@ internal struct WispContext {
     weak var sourceViewController: UIViewController?
     weak var collectionView: WispableCollectionView?
     
-    let indexPath: IndexPath
+    let sourceIndexPath: IndexPath
+    var destinationIndexPath: IndexPath?
     let sourceCellSnapshot: UIView?
     var presentedSnapshot: UIView?
     let configuration: WispConfiguration
+    
+    var isIndexPathChanged: Bool { sourceIndexPath != destinationIndexPath}
     
     internal mutating func setPresentedSnapshot(_ snapshot: UIView?) {
         self.presentedSnapshot = snapshot

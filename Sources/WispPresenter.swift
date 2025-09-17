@@ -48,7 +48,8 @@ public extension WispPresenter {
         let wispContext = WispContext(
             sourceViewController: presentingViewController,
             collectionView: collectionView,
-            indexPath: indexPath,
+            sourceIndexPath: indexPath,
+            destinationIndexPath: indexPath,
             sourceCellSnapshot: cellSnapshot,
             presentedSnapshot: nil,
             configuration: configuration
