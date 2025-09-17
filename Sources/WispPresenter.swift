@@ -18,6 +18,8 @@ public final class WispPresenter {
     
 }
 
+
+// MARK: - Public Presentation
 public extension WispPresenter {
     
     @MainActor func present(
@@ -65,6 +67,50 @@ public extension WispPresenter {
         viewControllerToPresent.transitioningDelegate = wispTransitioningDelegate
         presentingViewController.view.endEditing(true)
         presentingViewController.present(viewControllerToPresent, animated: true)
+    }
+    
+}
+
+
+// MARK: - Public Dismissal
+public extension WispPresenter {
+    
+    @MainActor
+    func dismiss(to indexPath: IndexPath? = nil, animated: Bool = true) {
+        guard presentingViewController != nil else {
+            return
+        }
+        guard let oldContext = WispManager.shared.contextStackManager.pop() else {
+            presentingViewController?.dismiss(animated: animated)
+            return
+        }
+        var newContext = consume oldContext
+        newContext.destinationIndexPath = indexPath ?? newContext.sourceIndexPath
+        WispManager.shared.contextStackManager.push(newContext)
+        
+        guard let wispPresentaitonController = self.presentingViewController?.presentationController as? WispPresentationController else {
+            presentingViewController?.dismiss(animated: animated)
+            return
+        }
+        if animated {
+            wispPresentaitonController.wispDismissableVC.dismissCard()
+        } else {
+            presentingViewController?.dismiss(animated: false)
+            newContext.collectionView?.makeSelectedCellVisible(indexPath: newContext.sourceIndexPath)
+        }
+    }
+    
+    @MainActor
+    func setDestinationIndex(to indexPath: IndexPath) {
+        guard presentingViewController != nil else {
+            return
+        }
+        guard let oldContext = WispManager.shared.contextStackManager.pop() else {
+            return
+        }
+        var newContext = consume oldContext
+        newContext.destinationIndexPath = indexPath
+        WispManager.shared.contextStackManager.push(newContext)
     }
     
 }
