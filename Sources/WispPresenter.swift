@@ -12,8 +12,8 @@ public final class WispPresenter {
     
     private weak var sourceViewController: UIViewController?
     
-    internal init(presentingVC: UIViewController) {
-        self.sourceViewController = presentingVC
+    internal init(source: UIViewController) {
+        self.sourceViewController = source
     }
     
 }

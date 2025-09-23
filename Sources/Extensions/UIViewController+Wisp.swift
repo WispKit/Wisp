@@ -10,7 +10,7 @@ import UIKit
 public extension UIViewController {
     
     var wisp: WispPresenter {
-        return WispPresenter(presentingVC: self)
+        return WispPresenter(source: self)
     }
     
 }
