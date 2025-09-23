@@ -10,6 +10,7 @@ import UIKit
 internal struct WispContext {
     
     weak var sourceViewController: UIViewController?
+    weak var viewControllerToPresent: UIViewController?
     weak var collectionView: WispableCollectionView?
     
     let sourceIndexPath: IndexPath

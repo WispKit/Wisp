@@ -49,6 +49,7 @@ public extension WispPresenter {
         
         let wispContext = WispContext(
             sourceViewController: sourceViewController,
+            viewControllerToPresent: viewControllerToPresent,
             collectionView: collectionView,
             sourceIndexPath: indexPath,
             destinationIndexPath: indexPath,
@@ -88,7 +89,7 @@ public extension WispPresenter {
         newContext.destinationIndexPath = indexPath ?? newContext.sourceIndexPath
         WispManager.shared.contextStackManager.push(newContext)
         
-        guard let wispPresentaitonController = self.sourceViewController?.presentationController as? WispPresentationController else {
+        guard let wispPresentaitonController = newContext.viewControllerToPresent?.presentationController as? WispPresentationController else {
             sourceViewController?.dismiss(animated: animated)
             return
         }
