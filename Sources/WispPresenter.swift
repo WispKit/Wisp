@@ -10,10 +10,10 @@ import UIKit
 
 public final class WispPresenter {
     
-    private weak var presentingViewController: UIViewController?
+    private weak var sourceViewController: UIViewController?
     
     internal init(presentingVC: UIViewController) {
-        self.presentingViewController = presentingVC
+        self.sourceViewController = presentingVC
     }
     
 }
@@ -28,12 +28,12 @@ public extension WispPresenter {
         at indexPath: IndexPath,
         configuration: WispConfiguration = .default
     ) {
-        guard let presentingViewController else { return }
-        guard presentingViewController.view.containsAsSubview(collectionView) else {
+        guard let sourceViewController else { return }
+        guard sourceViewController.view.containsAsSubview(collectionView) else {
             print("Collection view is not subview of presenting view controller's view.")
             print("Custom transition will be cancelled and run modal presentation.")
             viewControllerToPresent.modalPresentationStyle = .formSheet
-            presentingViewController.present(viewControllerToPresent, animated: true)
+            sourceViewController.present(viewControllerToPresent, animated: true)
             return
         }
         
@@ -42,13 +42,13 @@ public extension WispPresenter {
         /// (`present`되는 시점에 `presentingViewController`의 `presentedViewController` 가 존재하면)
         /// 의도한 custom transition 대신 `.fullScreen` 방식으로 transition되는 문제 발생.
         /// 시스템이 자동으로 fullscreen transition을 채택하는 것 같다.
-        guard presentingViewController.presentedViewController == nil else { return }
+        guard sourceViewController.presentedViewController == nil else { return }
         
         let selectedCell = collectionView.cellForItem(at: indexPath)
         let cellSnapshot = selectedCell?.snapshotView(afterScreenUpdates: false)
         
         let wispContext = WispContext(
-            sourceViewController: presentingViewController,
+            sourceViewController: sourceViewController,
             collectionView: collectionView,
             sourceIndexPath: indexPath,
             destinationIndexPath: indexPath,
@@ -65,8 +65,8 @@ public extension WispPresenter {
         WispManager.shared.transitioningDelegate = wispTransitioningDelegate
         viewControllerToPresent.modalPresentationStyle = .custom
         viewControllerToPresent.transitioningDelegate = wispTransitioningDelegate
-        presentingViewController.view.endEditing(true)
-        presentingViewController.present(viewControllerToPresent, animated: true)
+        sourceViewController.view.endEditing(true)
+        sourceViewController.present(viewControllerToPresent, animated: true)
     }
     
 }
@@ -77,32 +77,32 @@ public extension WispPresenter {
     
     @MainActor
     func dismiss(to indexPath: IndexPath? = nil, animated: Bool = true) {
-        guard presentingViewController != nil else {
+        guard sourceViewController != nil else {
             return
         }
         guard let oldContext = WispManager.shared.contextStackManager.pop() else {
-            presentingViewController?.dismiss(animated: animated)
+            sourceViewController?.dismiss(animated: animated)
             return
         }
         var newContext = consume oldContext
         newContext.destinationIndexPath = indexPath ?? newContext.sourceIndexPath
         WispManager.shared.contextStackManager.push(newContext)
         
-        guard let wispPresentaitonController = self.presentingViewController?.presentationController as? WispPresentationController else {
-            presentingViewController?.dismiss(animated: animated)
+        guard let wispPresentaitonController = self.sourceViewController?.presentationController as? WispPresentationController else {
+            sourceViewController?.dismiss(animated: animated)
             return
         }
         if animated {
             wispPresentaitonController.wispDismissableVC.dismissCard()
         } else {
-            presentingViewController?.dismiss(animated: false)
+            sourceViewController?.dismiss(animated: false)
             newContext.collectionView?.makeSelectedCellVisible(indexPath: newContext.sourceIndexPath)
         }
     }
     
     @MainActor
     func setDestinationIndex(to indexPath: IndexPath) {
-        guard presentingViewController != nil else {
+        guard sourceViewController != nil else {
             return
         }
         guard let oldContext = WispManager.shared.contextStackManager.pop() else {
