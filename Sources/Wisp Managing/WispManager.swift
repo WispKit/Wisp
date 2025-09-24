@@ -145,9 +145,15 @@ private extension WispManager {
             for: initialVelocity,
             animatingDistance: distanceDiff.inverted()
         )
-        let timingParameters = UISpringTimingParameters(dampingRatio: 0.8, initialVelocity: velocityVector)
-        let cardRestoringMovingAnimator = UIViewPropertyAnimator(duration: 0.6, timingParameters: timingParameters)
-        let cardRestoringSizeAnimator = UIViewPropertyAnimator(duration: 0.7, dampingRatio: 1)
+        
+        let isAnimationFast = context.configuration.animation.speed == .fast
+        let dampingRatio = isAnimationFast ? 1.0 : 0.8
+        let movingDuration = context.configuration.animation.speed.rawValue
+        let sizeDuration = isAnimationFast ? movingDuration : (movingDuration + 0.1)
+        
+        let timingParameters = UISpringTimingParameters(dampingRatio: dampingRatio, initialVelocity: velocityVector)
+        let cardRestoringMovingAnimator = UIViewPropertyAnimator(duration: movingDuration, timingParameters: timingParameters)
+        let cardRestoringSizeAnimator = UIViewPropertyAnimator(duration: sizeDuration, dampingRatio: 1)
         
         cardRestoringMovingAnimator.addAnimations {
             var newCenter = restoringCard.center

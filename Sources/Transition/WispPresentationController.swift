@@ -18,7 +18,6 @@ internal class WispPresentationController: UIPresentationController {
     }
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
     private let cardContainerView: UIView
-    internal let wispDismissableVC: UIViewController
     
     private let tapGesture = UITapGestureRecognizer()
     private let tapRecognizingView = UIView()
@@ -30,10 +29,9 @@ internal class WispPresentationController: UIPresentationController {
         presenting presentingViewController: UIViewController?,
         cardContainerView: UIView
     ) {
-        self.wispDismissableVC = presentedViewController
         self.cardContainerView = cardContainerView
         super.init(
-            presentedViewController: self.wispDismissableVC,
+            presentedViewController: presentedViewController,
             presenting: presentingViewController
         )
         self.feedbackGenerator.prepare()
@@ -75,7 +73,7 @@ internal class WispPresentationController: UIPresentationController {
 private extension WispPresentationController {
     
     @objc func containerViewDidTapped(_ sender: UITapGestureRecognizer) {
-        wispDismissableVC.dismissCard()
+        presentedViewController.dismissCard()
     }
     
     @objc func dragPanGesturehandler(_ gesture: UIPanGestureRecognizer) {
@@ -109,7 +107,7 @@ private extension WispPresentationController {
                 (translation.y > 0.0))
             
             if shouldDismiss {
-                wispDismissableVC.dismissCard(withVelocity: velocity)
+                presentedViewController.dismissCard(withVelocity: velocity)
             } else {
                 UIView.springAnimate(withDuration: 0.5, options: .allowUserInteraction) {
                     view.transform = .identity
