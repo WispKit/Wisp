@@ -32,7 +32,9 @@ internal extension UIViewController {
             wispTransitioningDelegate.presentingAnimator.stopAnimation(false)
             wispTransitioningDelegate.presentingAnimator.finishAnimation(at: .current)
         }
-        startCardDismissing(withVelocity: initialVelocity)
+        Task {
+            startCardDismissing(withVelocity: initialVelocity)
+        }
     }
     
     private func startCardDismissing(withVelocity initialVelocity: CGPoint) {
