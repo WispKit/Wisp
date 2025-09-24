@@ -94,7 +94,7 @@ public extension WispPresenter {
             return
         }
         if animated {
-            wispPresentaitonController.wispDismissableVC.dismissCard()
+            wispPresentaitonController.presentedViewController.dismissCard()
         } else {
             sourceViewController?.dismiss(animated: false)
             newContext.collectionView?.makeSelectedCellVisible(indexPath: newContext.sourceIndexPath)
