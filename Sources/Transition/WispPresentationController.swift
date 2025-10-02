@@ -124,14 +124,14 @@ private extension WispPresentationController {
 extension WispPresentationController {
     
     /// Recursively finds and returns all subviews of the given view that are of the specified type.
-    private func findSubViews<T: UIView>(in view: UIView) -> Set<T> {
+    private func findSubviews<T: UIView>(in view: UIView) -> Set<T> {
         var subViews: Set<T> = []
         
         if let viewInType = view as? T {
             subViews.insert(viewInType)
         }
         for subview in view.subviews {
-            subViews.formUnion(findSubViews(in: subview))
+            subViews.formUnion(findSubviews(in: subview))
         }
         return subViews
     }
@@ -181,7 +181,7 @@ extension WispPresentationController: UIGestureRecognizerDelegate {
         }
         
         /// blocks `wisp`'s `pan gesture` when tried to pan 'scrollable' `UIControls`.
-        let subControls: Set<UIControl> = findSubViews(in: view)
+        let subControls: Set<UIControl> = findSubviews(in: view)
         let scrollableSubControls = subControls.filter { $0 is ScrollableControl }
         for control in scrollableSubControls {
             if control.isDescendant(of: view){
@@ -192,7 +192,7 @@ extension WispPresentationController: UIGestureRecognizerDelegate {
             }
         }
         
-        let subScrollViews: Set<UIScrollView> = findSubViews(in: view)
+        let subScrollViews: Set<UIScrollView> = findSubviews(in: view)
         let filteredSubScrollView = subScrollViews.filter { scrollView in
             guard scrollView.isDescendant(of: view) else { return false }
             let scrollViewConvertedFrame = view.convert(scrollView.frame, to: view)
