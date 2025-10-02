@@ -182,7 +182,7 @@ extension WispPresentationController: UIGestureRecognizerDelegate {
         
         /// blocks `wisp`'s `pan gesture` when tried to pan 'scrollable' `UIControls`.
         let subControls: Set<UIControl> = findSubviews(in: view)
-        let scrollableSubControls = subControls.filter { $0 is ScrollableControl }
+        let scrollableSubControls = subControls.filter { $0 is (any ScrollableComponent) }
         for control in scrollableSubControls {
             if control.isDescendant(of: view){
                 let controlConvertedFrame = control.superview?.convert(control.frame, to: cardContainerView) ?? .zero
