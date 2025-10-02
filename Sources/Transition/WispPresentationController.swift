@@ -232,6 +232,7 @@ extension WispPresentationController: UIGestureRecognizerDelegate {
         let isContentScrollable = contentVerticalScrollable || contentHorizontalScrollable
         
         guard isContentScrollable else {
+            scrollView.panGestureRecognizer.state = .ended
             return true
         }
         
