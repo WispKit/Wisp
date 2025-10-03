@@ -77,26 +77,42 @@ public extension WispPresenter {
 public extension WispPresenter {
     
     @MainActor
-    func dismiss(to indexPath: IndexPath? = nil, animated: Bool = true) {
-        guard sourceViewController != nil else {
+    func dismiss(to indexPath: IndexPath? = nil, animated: Bool = true, autoFallback: Bool = false) {
+        guard let sourceViewController else {
             return
         }
-        guard let oldContext = WispManager.shared.contextStackManager.pop() else {
-            sourceViewController?.dismiss(animated: animated)
-            return
-        }
-        var newContext = consume oldContext
-        newContext.destinationIndexPath = indexPath ?? newContext.sourceIndexPath
-        WispManager.shared.contextStackManager.push(newContext)
         
-        guard let wispPresentaitonController = newContext.viewControllerToPresent?.presentationController as? WispPresentationController else {
-            sourceViewController?.dismiss(animated: animated)
+        // validating if the vc to be dismissed is presented by `Wisp`
+        /*
+         currentContext.viewControllerToPresent와 sourceViewController.presentingViewController?.presentedViewController를 비교하는 이유는
+         sourceViewController가 navigationController 안의 VC인 경우, currentContext.viewControllerToPresent와 다른 값이 나올 수도 있기 때문.
+         */
+        guard let currentContext = WispManager.shared.contextStackManager.currentContext,
+              let vcToPresentInContext = currentContext.viewControllerToPresent,
+              vcToPresentInContext == sourceViewController.presentingViewController?.presentedViewController,
+              let wispPresentaitonController = vcToPresentInContext.presentationController as? WispPresentationController
+        else {
+            if autoFallback {
+                sourceViewController.dismiss(animated: animated)
+            } else {
+                print("""
+                      Warning: Attempted to dismiss a view controller that was not presented with Wisp. No action was taken.
+                      You can either set `autoFallback: true` to allow Wisp to automatically fallback to a standard UIKit dismissal,
+                      or call the standard `dismiss(animated:completion:)` method directly on the view controller to handle dismissal explicitly.
+                      """)
+            }
             return
         }
+        
+        // switching current context to apply the `indexPath` parameter.
+        var newContext = consume currentContext
+        newContext.destinationIndexPath = indexPath ?? newContext.sourceIndexPath
+        WispManager.shared.contextStackManager.currentContext = newContext
+        
         if animated {
             wispPresentaitonController.presentedViewController.dismissCard()
         } else {
-            sourceViewController?.dismiss(animated: false)
+            sourceViewController.dismiss(animated: false)
             newContext.collectionView?.makeSelectedCellVisible(indexPath: newContext.sourceIndexPath)
         }
     }
