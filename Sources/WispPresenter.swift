@@ -7,8 +7,14 @@
 
 import UIKit
 
+public protocol WispPresenterDelegate: AnyObject {
+    func wispWillRestore()
+    func wispDidRestore()
+}
 
 public final class WispPresenter {
+    
+    public weak var delegate: (any WispPresenterDelegate)?
     
     private weak var sourceViewController: UIViewController?
     
