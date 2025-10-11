@@ -26,6 +26,7 @@ import Combine
         guard let context = currentContext else { return }
         // 컬렉션뷰 구독 초기화
         cancellables = []
+        context.sourceViewController?.wisp.delegate?.wispWillRestore()
         restore(startFrame: startFrame, initialVelocity: initialVelocity, using: consume context)
         contextStackManager.pop()
     }
@@ -179,6 +180,7 @@ private extension WispManager {
             if let cancellable {
                 self?.cancellables.remove(cancellable)
             }
+            context.sourceViewController?.wisp.delegate?.wispWillRestore()
         }
         
         cardRestoringMovingAnimator.startAnimation()
