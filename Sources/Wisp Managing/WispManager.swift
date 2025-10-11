@@ -180,7 +180,7 @@ private extension WispManager {
             if let cancellable {
                 self?.cancellables.remove(cancellable)
             }
-            context.sourceViewController?.wisp.delegate?.wispWillRestore()
+            context.sourceViewController?.wisp.delegate?.wispDidRestore()
         }
         
         cardRestoringMovingAnimator.startAnimation()
