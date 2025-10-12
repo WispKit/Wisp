@@ -66,16 +66,12 @@ public extension WispPresenter {
             viewControllerToPresent: viewControllerToPresent,
             collectionView: collectionView,
             sourceIndexPath: indexPath,
-            destinationIndexPath: indexPath,
             sourceCellSnapshot: cellSnapshot,
-            presentedSnapshot: nil,
             configuration: configuration
         )
         
         self.context = wispContext
-        let wispTransitioningDelegate = WispTransitioningDelegate(
-            context: wispContext,
-        )
+        let wispTransitioningDelegate = WispTransitioningDelegate(context: wispContext)
         self.transitioningDelegate = wispTransitioningDelegate
         
         viewControllerToPresent.modalPresentationStyle = .custom
@@ -120,9 +116,7 @@ public extension WispPresenter {
         
         // switching previousPresenter's context to apply the `indexPath` parameter.
         if let newDestinationIndexPath = indexPath {
-            var indexPathUpdatedContext = previousContext
-            indexPathUpdatedContext.destinationIndexPath = indexPath ?? indexPathUpdatedContext.sourceIndexPath
-            previousPresenter.context = indexPathUpdatedContext
+            previousPresenter.context?.destinationIndexPath = newDestinationIndexPath
         }
         
         if animated {
@@ -146,9 +140,7 @@ public extension WispPresenter {
         else {
             return
         }
-        var indexPathUpdatedContext = previousContext
-        indexPathUpdatedContext.destinationIndexPath = indexPath
-        previousPresenter.context = indexPathUpdatedContext
+        previousPresenter.context?.destinationIndexPath = indexPath
     }
     
 }
