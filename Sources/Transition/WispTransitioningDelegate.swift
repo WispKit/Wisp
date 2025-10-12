@@ -40,6 +40,7 @@ internal final class WispTransitioningDelegate: NSObject, UIViewControllerTransi
         return WispPresentationController(
             presentedViewController: presented,
             presenting: presenting,
+            source: source,
             cardContainerView: cardContainerView
         )
     }

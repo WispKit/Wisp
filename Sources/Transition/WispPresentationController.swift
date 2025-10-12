@@ -16,6 +16,8 @@ internal class WispPresentationController: UIPresentationController {
             }
         }
     }
+    
+    private let sourceViewController: UIViewController
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
     private let cardContainerView: UIView
     
@@ -27,8 +29,10 @@ internal class WispPresentationController: UIPresentationController {
     init(
         presentedViewController: UIViewController,
         presenting presentingViewController: UIViewController?,
+        source: UIViewController,
         cardContainerView: UIView
     ) {
+        self.sourceViewController = source
         self.cardContainerView = cardContainerView
         super.init(
             presentedViewController: presentedViewController,
