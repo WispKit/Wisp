@@ -7,8 +7,11 @@
 
 import UIKit
 
+/// Delegate for Wisp lifecycle events
 public protocol WispPresenterDelegate: AnyObject {
+    /// Called right before a restoring animation starts
     func wispWillRestore()
+    /// Called right after restoring finished
     func wispDidRestore()
 }
 
