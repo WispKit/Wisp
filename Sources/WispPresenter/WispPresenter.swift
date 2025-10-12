@@ -17,7 +17,7 @@ public final class WispPresenter {
     
     public weak var delegate: (any WispPresenterDelegate)?
     
-    private weak var sourceViewController: UIViewController?
+    private weak var hostViewController: UIViewController?
     private weak var previousPresenter: WispPresenter? = nil
     private weak var nextPresenter: WispPresenter? = nil
     
@@ -26,8 +26,8 @@ public final class WispPresenter {
     private var cancellables: Set<AnyCancellable> = []
     private var transitioningDelegate: WispTransitioningDelegate? = nil
     
-    internal init(source: UIViewController) {
-        self.sourceViewController = source
+    internal init(host: UIViewController) {
+        self.hostViewController = host
     }
     
 }
@@ -42,12 +42,12 @@ public extension WispPresenter {
         at indexPath: IndexPath,
         configuration: WispConfiguration = .default
     ) {
-        guard let sourceViewController else { return }
-        guard sourceViewController.view.containsAsSubview(collectionView) else {
+        guard let hostViewController else { return }
+        guard hostViewController.view.containsAsSubview(collectionView) else {
             print("Collection view is not subview of presenting view controller's view.")
             print("Custom transition will be cancelled and run modal presentation.")
             viewControllerToPresent.modalPresentationStyle = .formSheet
-            sourceViewController.present(viewControllerToPresent, animated: true)
+            hostViewController.present(viewControllerToPresent, animated: true)
             return
         }
         
@@ -62,7 +62,7 @@ public extension WispPresenter {
         let cellSnapshot = selectedCell?.snapshotView(afterScreenUpdates: false)
         
         let wispContext = WispContext(
-            sourceViewController: sourceViewController,
+            sourceViewController: hostViewController,
             viewControllerToPresent: viewControllerToPresent,
             collectionView: collectionView,
             sourceIndexPath: indexPath,
@@ -84,8 +84,8 @@ public extension WispPresenter {
         self.nextPresenter = nextPresenter
         nextPresenter.previousPresenter = self
         
-        sourceViewController.view.endEditing(true)
-        sourceViewController.present(viewControllerToPresent, animated: true)
+        hostViewController.view.endEditing(true)
+        hostViewController.present(viewControllerToPresent, animated: true)
     }
     
 }
@@ -96,18 +96,18 @@ public extension WispPresenter {
     
     @MainActor
     func dismiss(to indexPath: IndexPath? = nil, animated: Bool = true, autoFallback: Bool = false) {
-        guard let sourceViewController else {
+        guard let hostViewController else {
             return
         }
         
         // validating if the vc to be dismissed is presented by `Wisp`
-        guard let actualVCToDismiss = sourceViewController.presentingViewController?.presentedViewController,
+        guard let actualVCToDismiss = hostViewController.presentingViewController?.presentedViewController,
               let previousPresenter = actualVCToDismiss.wisp.previousPresenter,
               let previousContext = previousPresenter.context,
               actualVCToDismiss == previousContext.viewControllerToPresent
         else {
             if autoFallback {
-                sourceViewController.dismiss(animated: animated)
+                hostViewController.dismiss(animated: animated)
             } else {
                 print("""
                       Warning: Attempted to dismiss a view controller that was not presented with Wisp. No action was taken.
@@ -128,18 +128,18 @@ public extension WispPresenter {
         if animated {
             previousPresenter.dismissPresentedVC()
         } else {
-            sourceViewController.dismiss(animated: false)
+            hostViewController.dismiss(animated: false)
             previousPresenter.context?.collectionView?.makeSelectedCellVisible(indexPath: previousContext.sourceIndexPath)
         }
     }
     
     @MainActor
     func setDestinationIndex(to indexPath: IndexPath) {
-        guard let sourceViewController else {
+        guard let hostViewController else {
             return
         }
         
-        guard let actualVCToDismiss = sourceViewController.presentingViewController?.presentedViewController,
+        guard let actualVCToDismiss = hostViewController.presentingViewController?.presentedViewController,
               let previousPresenter = actualVCToDismiss.wisp.previousPresenter,
               let previousContext = previousPresenter.context,
               actualVCToDismiss == previousContext.viewControllerToPresent

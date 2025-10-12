@@ -15,7 +15,7 @@ public extension UIViewController {
         if let existing = objc_getAssociatedObject(self, &wispKey) as? WispPresenter {
             return existing
         }
-        let newPresenter = WispPresenter(source: self)
+        let newPresenter = WispPresenter(host: self)
         objc_setAssociatedObject(self, &wispKey, newPresenter, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         return newPresenter
     }
