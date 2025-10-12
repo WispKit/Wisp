@@ -1,60 +1,38 @@
 //
-//  WispManager.swift
-//  NoteCard
+//  File.swift
+//  Wisp
 //
-//  Created by 김민성 on 7/28/25.
+//  Created by 김민성 on 10/12/25.
 //
-
-import UIKit
 
 import Combine
+import UIKit
 
-@MainActor final internal class WispManager {
+internal final class WispRestorationHandler {
     
-    static let shared = WispManager()
-    private init() {}
+    private weak var delegate: WispPresenterDelegate?
     
-    let contextStackManager = WispContextStackManager()
     private var cancellables: Set<AnyCancellable> = []
-    var currentContext: WispContext? {
-        contextStackManager.currentContext
+    
+    internal init(delegate: WispPresenterDelegate? = nil) {
+        self.delegate = delegate
     }
     
-    var transitioningDelegate: WispTransitioningDelegate? = nil
-    
-    func handleInteractiveDismissEnded(startFrame: CGRect, initialVelocity: CGPoint) {
-        guard let context = currentContext else { return }
-        // 컬렉션뷰 구독 초기화
-        cancellables = []
-        context.sourceViewController?.wisp.delegate?.wispWillRestore()
-        restore(startFrame: startFrame, initialVelocity: initialVelocity, using: consume context)
-        contextStackManager.pop()
-    }
-    
-}
-
-
-// MARK: - Restoring 관련
-private extension WispManager {
-    
-    func getDistanceDiff(startFrame: CGRect, endFrame: CGRect) -> CGPoint {
+    private func getDistanceDiff(startFrame: CGRect, endFrame: CGRect) -> CGPoint {
         return .init(
             x: startFrame.center.x - endFrame.center.x,
             y: startFrame.center.y - endFrame.center.y
         )
     }
     
-    func getScaleT(startFrame: CGRect, endFrame: CGRect) -> CGAffineTransform {
+    private func getScaleT(startFrame: CGRect, endFrame: CGRect) -> CGAffineTransform {
         return.init(
             scaleX: startFrame.width / endFrame.width,
             y: startFrame.height / endFrame.height,
         )
     }
     
-    func syncRestoringCardFrameToCell(
-        _ card: RestoringCard,
-        context: WispContext
-    ) {
+    private func syncRestoringCardFrameToCell(_ card: RestoringCard, context: WispContext) {
         guard let destinationIndexPath = context.destinationIndexPath,
               let restoringCell = context.collectionView?.cellForItem(at: destinationIndexPath)
         else {
@@ -68,7 +46,7 @@ private extension WispManager {
         context.sourceViewController?.view.layoutIfNeeded()
     }
     
-    func restore(startFrame: CGRect, initialVelocity: CGPoint, using context: WispContext) {
+    func restore(startFrame: CGRect, initialVelocity: CGPoint, context: WispContext) {
         let restoringCard = RestoringCard()
         // collectionView, 돌아가려는 셀이 존재하지 않는 경우
         guard let collectionView = context.collectionView,
@@ -101,7 +79,9 @@ private extension WispManager {
             }
         cancellable?.store(in: &cancellables)
         
-        guard let currentWindow = context.sourceViewController?.view.window else { return }
+        guard let currentWindow = context.sourceViewController?.view.window else {
+            return
+        }
         
         // restoring card 초기 위치, 크기 설정 위한 사전 계산
         let convertedStartFrame = currentWindow.convert(startFrame, to: collectionView)
@@ -173,14 +153,15 @@ private extension WispManager {
         }
         
         cardRestoringSizeAnimator.addCompletion { [weak self] stoppedPosition in
+            guard let self else { return }
             restoringCard.setStateAfterRestore()
             context.collectionView?.makeSelectedCellVisible(indexPath: destinationIndexPath)
             restoringCard.transform = .identity
             restoringCard.removeFromSuperview()
             if let cancellable {
-                self?.cancellables.remove(cancellable)
+                self.cancellables.remove(cancellable)
             }
-            context.sourceViewController?.wisp.delegate?.wispDidRestore()
+            self.delegate?.wispDidRestore()
         }
         
         cardRestoringMovingAnimator.startAnimation()

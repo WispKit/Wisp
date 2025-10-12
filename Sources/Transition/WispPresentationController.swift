@@ -16,6 +16,8 @@ internal class WispPresentationController: UIPresentationController {
             }
         }
     }
+    
+    private let sourceViewController: UIViewController
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
     private let cardContainerView: UIView
     
@@ -27,8 +29,10 @@ internal class WispPresentationController: UIPresentationController {
     init(
         presentedViewController: UIViewController,
         presenting presentingViewController: UIViewController?,
+        source: UIViewController,
         cardContainerView: UIView
     ) {
+        self.sourceViewController = source
         self.cardContainerView = cardContainerView
         super.init(
             presentedViewController: presentedViewController,
@@ -73,7 +77,7 @@ internal class WispPresentationController: UIPresentationController {
 private extension WispPresentationController {
     
     @objc func containerViewDidTapped(_ sender: UITapGestureRecognizer) {
-        presentedViewController.dismissCard()
+        sourceViewController.wisp.dismissPresentedVC()
     }
     
     @objc func dragPanGesturehandler(_ gesture: UIPanGestureRecognizer) {
@@ -107,7 +111,7 @@ private extension WispPresentationController {
                 (translation.y > 0.0))
             
             if shouldDismiss {
-                presentedViewController.dismissCard(withVelocity: velocity)
+                sourceViewController.wisp.dismissPresentedVC(withVelocity: velocity)
             } else {
                 UIView.springAnimate(withDuration: 0.5, options: .allowUserInteraction) {
                     view.transform = .identity
@@ -164,8 +168,8 @@ extension WispPresentationController: UIGestureRecognizerDelegate {
         guard let panGesture = gestureRecognizer as? UIPanGestureRecognizer else { return false }
         let velocity = panGesture.velocity(in: view)
         
-        guard let allowedDirections = WispManager.shared.currentContext?.configuration.gesture.allowedDirections else { return false
-        }
+        let wispPresenter = sourceViewController.wisp
+        guard let allowedDirections = wispPresenter.context?.configuration.gesture.allowedDirections else { return false }
         guard allowedDirections.contains(velocity.gestureDirections) else { return false }
         
         let gesturePoint = gestureRecognizer.location(in: view)
