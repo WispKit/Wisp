@@ -190,6 +190,19 @@ private extension WispPresenter {
         guard let cardContainerView = viewControllerToDismiss.view.superview else {
             return
         }
+        
+        guard let collectionView = context.collectionView,
+              let destinationIndexPath = context.destinationIndexPath,
+              let targetCell = collectionView.cellForItem(at: destinationIndexPath)
+        else {
+            // Apply fallback dismissing animation when target collectionView or cell is missing
+            delegate?.wispWillRestore()
+            viewControllerToDismiss.dismiss(animated: true) { [weak self] in
+                self?.delegate?.wispDidRestore()
+            }
+            return
+        }
+        
         delegate?.wispWillRestore()
         restorationHandler.restore(
             startFrame: cardContainerView.frame,
