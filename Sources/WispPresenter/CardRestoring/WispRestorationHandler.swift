@@ -46,7 +46,7 @@ internal final class WispRestorationHandler {
         context.sourceViewController?.view.layoutIfNeeded()
     }
     
-    func restore(startFrame: CGRect, initialVelocity: CGPoint, context: WispContext) {
+    func restore(startFrame: CGRect, initialVelocity: CGPoint, context: WispContext, completion: (() -> Void)?) {
         let restoringCard = RestoringCard()
         // collectionView, 돌아가려는 셀이 존재하지 않는 경우
         guard let collectionView = context.collectionView,
@@ -162,6 +162,7 @@ internal final class WispRestorationHandler {
                 self.cancellables.remove(cancellable)
             }
             self.delegate?.wispDidRestore()
+            completion?()
         }
         
         cardRestoringMovingAnimator.startAnimation()
