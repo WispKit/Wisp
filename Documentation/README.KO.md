@@ -112,7 +112,49 @@ wisp.present(secondVC, collectionView: myCollectionView, at: indexPath)
 self.wisp.dismiss(to: IndexPath(item: 0, section: 0), animated: true)
 ```
 
-### 5. Dismiss 함수 시그니처
+### 5. Delegate 사용하기
+
+Wisp는 카드가 원래 셀로 되돌아가는 복원(restoring) 애니메이션의 시작과 끝 시점을 감지할 수 있도록 delegate를 제공합니다.  
+이 복원 애니메이션은 실제 뷰 컨트롤러의 생명주기(lifecycle)와는 별개로 동작합니다.  
+왜냐하면 카드가 복원을 시작하는 시점에는 이미 해당 뷰 컨트롤러가 dismiss되었기 때문입니다.
+
+delegate는 **presenting view controller** 쪽에서 설정할 수 있습니다:
+
+``` swift
+import Wisp
+
+final class MyViewController: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        wisp.delegate = self
+    }
+}
+
+extension MyViewController: WispPresenterDelegate {
+    func wispWillRestore() {
+        print("복원이 시작됩니다.")
+    }
+
+    func wispDidRestore() {
+        print("복원이 완료되었습니다.")
+    }
+}
+```
+
+Wisp로 present된 뷰 컨트롤러가 드래그, 탭 또는 코드로 dismiss될 때,
+복원 애니메이션은 실제 뷰 컨트롤러가 아니라 캡처된 스냅샷 뷰에 의해 처리됩니다.
+따라서 UIKit의 생명주기 메서드(viewWillAppear, viewDidDisappear 등)에서는
+이 복원 시점을 감지할 수 없습니다.
+
+대신 Wisp의 delegate 메서드를 통해 다음과 같은 시점을 알 수 있습니다:
+
+- wispWillRestore(): 카드 복원이 시작될 때 호출
+- wispDidRestore(): 복원 애니메이션이 완료될 때 호출
+
+이 delegate를 이용하면 collection view의 상태를 동기화하거나,
+복원 시점에 맞춰 커스텀 UI 변경을 수행할 수 있습니다.
+
+### 6. Dismiss 함수 시그니처
 ``` swift
 func dismiss(
     to indexPath: IndexPath? = nil,
