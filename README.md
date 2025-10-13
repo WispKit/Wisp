@@ -115,7 +115,49 @@ However, if you want to dismiss explicitly at a specific moment in your code, yo
 // Inside the presented view controller
 self.wisp.dismiss(to: IndexPath(item: 0, section: 0), animated: true)
 ```
-#### 5. Dismiss API Signature
+
+### 5. Using Delegate
+
+Wisp provides a delegate so you can detect when a card restoration (returning animation) begins and ends.  
+This is useful because the restoring animation is not part of the actual view controller’s lifecycle —  
+the view controller is already dismissed when the card starts restoring.
+
+You can set the delegate from the presenting view controller:
+
+``` swift
+import Wisp
+import UIKit
+
+final class MyViewController: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        wisp.delegate = self
+    }
+}
+
+extension MyViewController: WispPresenterDelegate {
+    func wispWillRestore() {
+        print("Restoring will begin.")
+    }
+
+    func wispDidRestore() {
+        print("Restoring completed.")
+    }
+}
+```
+
+When a Wisp-presented view controller is dismissed (via drag, tap, or programmatically),
+the restoring animation is handled internally by a captured snapshot view, not by the dismissed view controller itself.
+Therefore, UIKit’s lifecycle methods such as viewWillAppear or viewDidDisappear won’t notify you of this transition.
+Instead, you can rely on these two delegate methods:
+
+- `wispWillRestore()`: called when the card restoration begins
+- `wispDidRestore()`: called when the restoration animation finishes
+
+You can use this delegate to coordinate updates with your collection view or perform custom UI changes.
+
+
+### 6. Dismiss API Signature
 
 ``` swift
 func dismiss(
