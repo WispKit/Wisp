@@ -17,6 +17,14 @@ public protocol WispPresenterDelegate: AnyObject {
 
 public final class WispPresenter {
     
+    internal enum State {
+        case idle
+        case presenting
+        case presented
+        case dismissing
+        case restoring
+    }
+    
     public weak var delegate: (any WispPresenterDelegate)?
     private lazy var restorationHandler = WispRestorationHandler(delegate: self.delegate)
     
@@ -25,6 +33,7 @@ public final class WispPresenter {
     private weak var nextPresenter: WispPresenter? = nil
     
     internal private(set) var context: WispContext? = nil
+    internal private(set) var state: State = .idle 
     
     private var transitioningDelegate: WispTransitioningDelegate? = nil
     
@@ -45,6 +54,14 @@ public extension WispPresenter {
         configuration: WispConfiguration = .default
     ) {
         guard let hostViewController else { return }
+        guard state != .presenting else {
+            print("""
+            ⚠️ Wisp Warning: Duplicate presentation detected from \(hostViewController)
+            Wisp will proceed only with the first presentation call and ignore any subsequent ones.
+            """)
+            return
+        }
+        state = .presenting
         guard hostViewController.view.containsAsSubview(collectionView) else {
             fatalError("""
             WispPresenter Error: The collection view must be a subview of the presenting view controller's view.
@@ -74,7 +91,10 @@ public extension WispPresenter {
         nextPresenter.previousPresenter = self
         
         hostViewController.view.endEditing(true)
-        hostViewController.present(viewControllerToPresent, animated: true)
+        hostViewController.present(viewControllerToPresent, animated: true) { [weak self] in
+            guard let self else { return }
+            self.state = .presented
+        }
     }
     
 }
@@ -145,6 +165,7 @@ internal extension WispPresenter {
         guard let context,
               let viewControllerToDismiss = context.viewControllerToPresent
         else {
+            // TODO: - 예외처리 필요
             return
         }
         
@@ -160,6 +181,7 @@ internal extension WispPresenter {
         }
         
         Task {
+            self.state = .dismissing
             await startWispDismissing(with: initialVelocity)
         }
     }
@@ -195,11 +217,15 @@ private extension WispPresenter {
         }
         
         delegate?.wispWillRestore()
+        state = .restoring
         restorationHandler.restore(
             startFrame: cardContainerView.frame,
             initialVelocity: initialVelocity,
             context: context
-        )
+        ) { [weak self] in
+            guard let self else { return }
+            self.state = .idle
+        }
         viewControllerToDismiss.dismiss(animated: false)
         viewControllerToDismiss.view.isHidden = true
         

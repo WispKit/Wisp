@@ -77,6 +77,11 @@ internal class WispPresentationController: UIPresentationController {
 private extension WispPresentationController {
     
     @objc func containerViewDidTapped(_ sender: UITapGestureRecognizer) {
+        let noAdditionalVCPresented = presentedViewController.presentedViewController == nil
+        let alreadyPresenting = presentedViewController.wisp.state != .presenting
+        guard (noAdditionalVCPresented && alreadyPresenting) else {
+            return
+        }
         sourceViewController.wisp.dismissPresentedVC()
     }
     
@@ -108,9 +113,11 @@ private extension WispPresentationController {
             let velocityScalar = sqrt(pow(velocity.x, 2) + pow(velocity.y, 2))
             let shouldDismiss = (
                 (hypotenuse > hypotenuseThreshold || velocityScalar > (1500.0-hypotenuse*1.5)) &&
-                (translation.y > 0.0))
-            
-            if shouldDismiss {
+                (translation.y > 0.0)
+            )
+            let noAdditionalVCPresented = presentedViewController.presentedViewController == nil
+            let alreadyPresenting = presentedViewController.wisp.state != .presenting
+            if (shouldDismiss && noAdditionalVCPresented && alreadyPresenting) {
                 sourceViewController.wisp.dismissPresentedVC(withVelocity: velocity)
             } else {
                 UIView.springAnimate(withDuration: 0.5, options: .allowUserInteraction) {
