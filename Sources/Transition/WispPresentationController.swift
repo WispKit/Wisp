@@ -82,6 +82,13 @@ private extension WispPresentationController {
         guard (noAdditionalVCPresented && alreadyPresenting) else {
             return
         }
+        let wispPresenter = sourceViewController.wisp
+        guard let context = wispPresenter.context else {
+            return
+        }
+        guard context.configuration.gesture.dismissByTap else {
+            return
+        }
         sourceViewController.wisp.dismissPresentedVC()
     }
     
