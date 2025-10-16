@@ -23,7 +23,7 @@ public struct WispConfiguration {
     }
     
     public struct GestureOptions {
-        public var allowedDirections: GestureDirection = [.horizontalOnly, .down]
+        public var allowedDirections: GestureDirection = [.horizontal, .down]
         public var dismissByTap: Bool = true
         
         public init() {}

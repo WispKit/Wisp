@@ -20,7 +20,13 @@ public struct GestureDirection: OptionSet {
     
     public static let none: GestureDirection = []
     public static let all: GestureDirection = [.up, .left, .right, .down]
+    public static let horizontal: GestureDirection = [.left, .right]
+    public static let vertical: GestureDirection = [.up, .down]
+    
+    @available(*, deprecated, renamed: "horizontal", message: "Renamed to `horizontal`. This name will be removed in future releases.")
     public static let horizontalOnly: GestureDirection = [.left, .right]
+    
+    @available(*, deprecated, renamed: "vertical", message: "Renamed to `horizontal`. This name will be removed in future releases.")
     public static let verticalOnly: GestureDirection = [.up, .down]
     
 }
