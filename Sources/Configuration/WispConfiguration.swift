@@ -23,7 +23,8 @@ public struct WispConfiguration {
     }
     
     public struct GestureOptions {
-        public var allowedDirections: GestureDirection = [.horizontalOnly, .down]
+        public var allowedDirections: GestureDirection = [.horizontal, .down]
+        public var dismissByTap: Bool = true
         
         public init() {}
     }
@@ -32,14 +33,18 @@ public struct WispConfiguration {
         public var presentedAreaInset: UIEdgeInsets = .zero
         public var initialCornerRadius: CGFloat = 0
         public var finalCornerRadius: CGFloat = 20
-        public var initialMaskedCorner: CACornerMask = [.layerMaxXMaxYCorner,
-                                                                      .layerMaxXMinYCorner,
-                                                                      .layerMinXMaxYCorner,
-                                                                      .layerMinXMinYCorner]
-        public var finalMaskedCorner: CACornerMask = [.layerMaxXMaxYCorner,
-                                                                    .layerMaxXMinYCorner,
-                                                                    .layerMinXMaxYCorner,
-                                                                    .layerMinXMinYCorner]
+        public var initialMaskedCorner: CACornerMask = [
+            .layerMaxXMaxYCorner,
+            .layerMaxXMinYCorner,
+            .layerMinXMaxYCorner,
+            .layerMinXMinYCorner
+        ]
+        public var finalMaskedCorner: CACornerMask = [
+            .layerMaxXMaxYCorner,
+            .layerMaxXMinYCorner,
+            .layerMinXMaxYCorner,
+            .layerMinXMinYCorner
+        ]
         
         public init() {}
     }

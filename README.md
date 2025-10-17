@@ -37,45 +37,72 @@ This library supports installation via [Swift Package Manager](https://swift.org
 
 ## 🚀 How To Use
 
-### 1. Create your `WispableCollectionView`
-Just like `UICollectionView`, but it takes a `WispCompositionalLayout` instead of `UICollectionViewLayout`.
+### 1. Create a WispCompositionalLayout
 
-```swift
-import Wisp
+`WispCompositionalLayout` is designed to work almost identically to `UICollectionViewCompositionalLayout`.
+You can use the same APIs you already know — the only difference is that you call them through `.wisp.make`.
 
+That means every factory method available on `UICollectionViewCompositionalLayout`
+(e.g. `init(section:)`, `init(sectionProvider:)`, or `list(using:)`)
+has its Wisp equivalent:
+
+``` swift
+@MainActor
+func make(section: NSCollectionLayoutSection) -> WispCompositionalLayout
+
+@MainActor
+func make(
+    section: NSCollectionLayoutSection,
+    configuration: UICollectionViewCompositionalLayoutConfiguration
+) -> WispCompositionalLayout
+
+@MainActor
+func make(
+    sectionProvider: @escaping UICollectionViewCompositionalLayoutSectionProvider
+) -> WispCompositionalLayout
+
+@MainActor
+func make(
+    sectionProvider: @escaping UICollectionViewCompositionalLayoutSectionProvider,
+    configuration: UICollectionViewCompositionalLayoutConfiguration
+) -> WispCompositionalLayout
+
+@MainActor
+func list(using configuration: UICollectionLayoutListConfiguration) -> WispCompositionalLayout
+```
+
+So instead of calling UIKit’s initializer directly,
+you can simply use the .wisp.make(...) syntax:
+``` swift
+// Multi-section layout
 let layout = UICollectionViewCompositionalLayout.wisp.make { sectionIndex, layoutEnvironment in
+    // return your SectionProvider here
+}
+
+// Single-section layout
+let simpleLayout = UICollectionViewCompositionalLayout.wisp.make {
     // return your NSCollectionLayoutSection here
 }
 
+// List layout
+let listLayout = UICollectionViewCompositionalLayout.wisp.make.list(using: .plain)
+```
+
+### 2. Create a `WispableCollectionView`
+
+`WispableCollectionView` is just like `UICollectionView`, but it takes a `WispCompositionalLayout` instead of `UICollectionViewLayout`.
+Once you have your layout, pass it to `WispableCollectionView`:
+
+``` swift
 let myCollectionView = WispableCollectionView(
     frame: .zero,
     collectionViewLayout: layout
 )
 ```
 
-For a simple single-section layout:
-``` swift
-// ...
-let myCollectionView = WispableCollectionView(
-    frame: .zero,
-    collectionViewLayout: UICollectionViewCompositionalLayout.wisp.make {
-        // return your NSCollectionLayoutSection here
-    }
-)
-// ...
-```
+Or inline it:
 
-or you can simply write like
 ``` swift
-// multi-section layout
-let myCollectionView = WispableCollectionView(
-    frame: .zero,
-    collectionViewLayout: .wisp.make { sectionIndex, layoutEnvironment in
-        // return your NSCollectionLayoutSection here
-    }
-)
-
-// single-section layout
 let myCollectionView = WispableCollectionView(
     frame: .zero,
     collectionViewLayout: .wisp.make {
@@ -84,10 +111,7 @@ let myCollectionView = WispableCollectionView(
 )
 ```
 
-
-### 2. Use the `UIKit` built-in list layout
-When you need a list-style layout, just call:
-
+You can also build with list layout easily:
 ``` swift
 let myListView = WispableCollectionView(
     frame: .zero,
@@ -99,12 +123,28 @@ or you can simplify like this:
 let myListView = WispableCollectionView(frame: .zero, collectionViewLayout: .wisp.list(using: .plain))
 ```
 
-### 3. Present with one line
+### 3. Present using `wisp.present( ... )`
 No extra delegates or boilerplate needed.
 ``` swift
-let secondVC = MyViewController()
-wisp.present(secondVC, collectionView: myCollectionView, at: indexPath)
-// ⚠️ Note: The collection view must be a subview of the presenting view controller.
+class MyViewController: UIViewController, UICollectionViewDelegate {
+    
+    // ...
+    
+    let myCollectionView: WispableCollectionView(
+        frame: .zero,
+        collectionViewLayout: .wisp.make { ... }
+    )
+    // ...
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let secondVC = MyViewController()
+        wisp.present(secondVC, collectionView: myCollectionView, at: indexPath)
+        // ⚠️ Note: The collection view must be a subview of the presenting view controller.
+    }
+    
+    // ...
+    
+}
 ```
 
 ### 4. Dismiss Behavior
@@ -198,6 +238,7 @@ let configuration = WispConfiguration { config in
     // Gesture configuration
     config.setGesture { gesture in
         gesture.allowedDirections = [.right, .down]
+        gesture.dismissByTap = false
     }
     
     // Layout configuration

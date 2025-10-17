@@ -17,6 +17,7 @@ let configuration = WispConfiguration { config in
     // Gesture configuration
     config.setGesture { gesture in
         gesture.allowedDirections = [.right, .down]
+        gesture.dismissByTap = false
     }
     
     // Layout configuration
@@ -31,7 +32,7 @@ let configuration = WispConfiguration { config in
 ## Available Configuration Options
 
 ### Animation
-- speed: .slow, .normal, .fast
+- speed: `enum` (.slow, .normal, .fast)
 ``` swift
 config.setAnimation { animation in
     animation.speed = .fast
@@ -39,10 +40,12 @@ config.setAnimation { animation in
 ```
 
 ## Gesture
-- swipeToDismiss: true / false
+- allowedDirections: OptionSet (up, left, right, down)
+- dismissByTap: Bool
 ``` swift
 config.setGesture { gesture in
     gesture.allowedDirections = [.right, .down]
+    gesture.dismissByTap = false
 }
 ```
 
