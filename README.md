@@ -40,7 +40,7 @@ This library supports installation via [Swift Package Manager](https://swift.org
 ### 1. Create a WispCompositionalLayout
 
 `WispCompositionalLayout` is designed to work almost identically to `UICollectionViewCompositionalLayout`.
-You can use the same APIs you already know — the only difference is that you call them through `.wisp`.
+You can use the same APIs you already know — the only difference is that you call them through `.wisp.make`.
 
 That means every factory method available on `UICollectionViewCompositionalLayout`
 (e.g. `init(section:)`, `init(sectionProvider:)`, or `list(using:)`)
@@ -83,12 +83,15 @@ let layout = UICollectionViewCompositionalLayout.wisp.make { sectionIndex, layou
 let simpleLayout = UICollectionViewCompositionalLayout.wisp.make {
     // return your NSCollectionLayoutSection here
 }
+
+// List layout
+let listLayout = UICollectionViewCompositionalLayout.wisp.make.list(using: .plain)
 ```
 
 ### 2. Create a `WispableCollectionView`
 
 `WispableCollectionView` is just like `UICollectionView`, but it takes a `WispCompositionalLayout` instead of `UICollectionViewLayout`.
-Once you have your layout, pass it to WispableCollectionView:
+Once you have your layout, pass it to `WispableCollectionView`:
 
 ``` swift
 let myCollectionView = WispableCollectionView(
@@ -130,7 +133,7 @@ class MyViewController: UIViewController, UICollectionViewDelegate {
     let myCollectionView: WispableCollectionView(
         frame: .zero,
         collectionViewLayout: .wisp.make { ... }
-        
+    )
     // ...
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -235,6 +238,7 @@ let configuration = WispConfiguration { config in
     // Gesture configuration
     config.setGesture { gesture in
         gesture.allowedDirections = [.right, .down]
+        gesture.dismissByTap = false
     }
     
     // Layout configuration
