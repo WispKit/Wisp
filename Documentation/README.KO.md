@@ -33,74 +33,117 @@ Wisp는 [Swift Package Manager](https://swift.org/package-manager/)를 통해 �
 
 ## 🚀 사용 방법
 
-### 1. WispableCollectionView 생성하기
-`UICollectionView`와 거의 동일하지만, `UICollectionViewLayout` 대신 `WispCompositionalLayout`을 받습니다. 
+### 1. WispCompositionalLayout 생성하기
+
+`WispCompositionalLayout`은 `UICollectionViewCompositionalLayout`과 거의 동일한 방식으로 동작합니다.
+이미 알고 있는 UIKit의 API를 그대로 사용할 수 있으며, `.wisp.make`를 사용하여 생성합니다.
+
+즉, `UICollectionViewCompositionalLayout`에서 사용할 수 있는 모든 팩토리 메서드
+(init(section:), init(sectionProvider:), list(using:) 등)는
+Wisp에서도 동일하게 제공됩니다:
 
 ```swift
-import Wisp
+@MainActor
+func make(section: NSCollectionLayoutSection) -> WispCompositionalLayout
 
+@MainActor
+func make(
+    section: NSCollectionLayoutSection,
+    configuration: UICollectionViewCompositionalLayoutConfiguration
+) -> WispCompositionalLayout
+
+@MainActor
+func make(
+    sectionProvider: @escaping UICollectionViewCompositionalLayoutSectionProvider
+) -> WispCompositionalLayout
+
+@MainActor
+func make(
+    sectionProvider: @escaping UICollectionViewCompositionalLayoutSectionProvider,
+    configuration: UICollectionViewCompositionalLayoutConfiguration
+) -> WispCompositionalLayout
+
+@MainActor
+func list(using configuration: UICollectionLayoutListConfiguration) -> WispCompositionalLayout
+```
+
+UIKit의 이니셜라이저를 직접 호출하는 대신
+.wisp.make(...) 문법을 사용하면 됩니다:
+
+``` swift
+// 멀티 섹션 레이아웃
 let layout = UICollectionViewCompositionalLayout.wisp.make { sectionIndex, layoutEnvironment in
-    // return your NSCollectionLayoutSection here
+    // 여기서 SectionProvider를 반환하세요.
 }
 
+// 단일 섹션 레이아웃
+let simpleLayout = UICollectionViewCompositionalLayout.wisp.make {
+    // 여기서 NSCollectionLayoutSection을 반환하세요.
+}
+
+// 리스트 레이아웃
+let listLayout = UICollectionViewCompositionalLayout.wisp.list(using: .plain)
+```
+
+이 방식을 사용하면 기존 `UICollectionViewCompositionalLayout` 코드를 거의 수정하지 않고 그대로 재사용할 수 있습니다.
+생성 구문(.wisp.make { ... })만 변경하여 사용할 수 있습니다.
+
+
+### 2. WispableCollectionView 생성하기
+`WispableCollectionView`는 기본적으로 `UICollectionView`와 동일하지만,
+`UICollectionViewLayout` 대신 `WispCompositionalLayout`을 받습니다.
+생성된 레이아웃을 그대로 전달하면 됩니다:
+
+``` swift
 let myCollectionView = WispableCollectionView(
     frame: .zero,
     collectionViewLayout: layout
 )
 ```
-
-단일 섹션 레이아웃의 경우:
+또는 한 줄로 간단히 작성할 수도 있습니다:
 ``` swift
-// ...
-let myCollectionView = WispableCollectionView(
-    frame: .zero,
-    collectionViewLayout: UICollectionViewCompositionalLayout.wisp.make {
-        // return your NSCollectionLayoutSection here
-    }
-)
-// ...
-```
-
-혹은 더 간단히 이렇게 작성할 수도 있습니다:
-``` swift
-// 다중 섹션 레이아웃
-let myCollectionView = WispableCollectionView(
-    frame: .zero,
-    collectionViewLayout: .wisp.make { sectionIndex, layoutEnvironment in
-        // return your NSCollectionLayoutSection here
-    }
-)
-
-// 단일 섹션 레이아웃
 let myCollectionView = WispableCollectionView(
     frame: .zero,
     collectionViewLayout: .wisp.make {
-        // return your NSCollectionLayoutSection here
+        // NSCollectionLayoutSection을 반환하세요.
     }
 )
 ```
 
-### 2. UIKit의 내장 리스트 레이아웃 사용하기
-UIKit의 리스트 스타일 레이아웃이 필요하다면 간단히 이렇게 호출하세요:
-
+리스트 형태의 레이아웃을 사용하는 경우:
 ``` swift
 let myListView = WispableCollectionView(
     frame: .zero,
     collectionViewLayout: UICollectionViewCompositionalLayout.wisp.list(using: .plain)
 )
-```
-혹은 더 간단히:
-``` swift
+
+// 위 코드는 다음과 같이 한 줄로 간단하게 작성할 수도 있습니다.
 let myListView = WispableCollectionView(frame: .zero, collectionViewLayout: .wisp.list(using: .plain))
 ```
 
 ### 3. wisp.present로 화면 전환하기
-추가 delegate 설정은 필요 없습니다. 한 줄이면 동작합니다!
+별도의 복잡한 커스텀 트랜지션 설정 없이 바로 사용할 수 있습니다.
 
 ``` swift
-let secondVC = MyViewController()
-wisp.present(secondVC, collectionView: myCollectionView, at: indexPath)
-// ⚠️ Note: The collection view must be a subview of the presenting view controller.
+class MyViewController: UIViewController, UICollectionViewDelegate {
+    
+    // ...
+    
+    let myCollectionView = WispableCollectionView(
+        frame: .zero,
+        collectionViewLayout: .wisp.make { ... }
+    )
+    
+    // ...
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let secondVC = MyViewController()
+        wisp.present(secondVC, collectionView: myCollectionView, at: indexPath)
+        // ⚠️ 주의: collectionView는 반드시 현재 ViewController의 하위 뷰로 포함되어 있어야 합니다.
+    }
+    
+    // ...
+}
 ```
 
 ### 4. Dismiss 동작
@@ -171,9 +214,8 @@ self.wisp.dismiss(to: IndexPath(item: 5, section: 0), animated: true)
 ```
 
 ### ✅ 끝!
-- UICollectionView와 친숙한 API
-- 커스텀 레이아웃 또는 리스트 레이아웃을 간단하게 생성
-- 번거로움 없는 매끄러운 화면 전환
+- UICollectionViewCompositional 코드를 거의 그대로 사용할 수 있습니다.
+- UIKit의 커스텀 트랜지션을 별도로 설정할 필요가 없습니다. 이제 번거로움 없이 매끄러운 화면 전환을 구현할 수 있습니다.
 
 ## ⚙️ Configuration
 
@@ -184,7 +226,7 @@ self.wisp.dismiss(to: IndexPath(item: 5, section: 0), animated: true)
 버전 **1.3.0**부터 `WispConfiguration`이 **DSL 기반 구성 방식**으로 리팩토링되었습니다.  
 이로 인해 코드 가독성, 유지보수성, 확장성이 개선되었습니다.
 
-> 자세한 내용은 [WispConfiguration DSL 가이드](./WispConfiguration.md)를 참고하세요.
+> WispConfiguration에 대한 자세한 내용은 [WispConfiguration DSL 가이드](./WispConfiguration.md)를 참고하세요.
 
 ### 간단 예제
 
@@ -198,6 +240,7 @@ let configuration = WispConfiguration { config in
     // Gesture configuration
     config.setGesture { gesture in
         gesture.allowedDirections = [.right, .down]
+        gesture.dismissByTap = false
     }
     
     // Layout configuration
