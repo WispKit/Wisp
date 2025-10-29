@@ -169,6 +169,20 @@ internal extension WispPresenter {
             return
         }
         
+        guard context.collectionView?.window != nil else {
+            print("""
+                  ⚠️ Warning: collectionView.window is nil — unable to perform restore animation.
+                  Falling back to default dismiss transition.
+                  """)
+            context.collectionView?.makeSelectedCellVisible(indexPath: context.sourceIndexPath)
+            delegate?.wispWillRestore()
+            viewControllerToDismiss.dismiss(animated: true) { [weak self] in
+                guard let self else { return }
+                self.delegate?.wispDidRestore()
+            }
+            return
+        }
+        
         guard let transitioningDelegate else {
             context.collectionView?.makeSelectedCellVisible(indexPath: context.sourceIndexPath)
             viewControllerToDismiss.dismiss(animated: true)
