@@ -153,9 +153,26 @@ By default, a wisp-presented view controller can be dismissed with a drag gestur
 However, if you want to dismiss explicitly at a specific moment in your code, you can call the public API:
 
 ``` swift
-// Inside the presented view controller
-self.wisp.dismiss(to: IndexPath(item: 0, section: 0), animated: true)
+func dismiss(
+    to indexPath: IndexPath? = nil,
+    animated: Bool = true
+)
 ```
+
+``` swift
+// Inside the presented view controller
+self.wisp.dismiss(animated: true)
+```
+
+If indexPath is nil, the view will try to use the original indexPath used at the time of presentation.
+If you want the view to dismiss to a different indexPath, just provide it in the to parameter.
+
+Example:
+``` swift
+// Dismiss to a different cell than the one originally presented from
+self.wisp.dismiss(to: IndexPath(item: 5, section: 0), animated: true)
+```
+
 
 ### 5. Using Delegate
 
@@ -196,24 +213,6 @@ Instead, you can rely on these two delegate methods:
 - `wispDidRestore()`: called when the restoration animation finishes
 
 You can use this delegate to coordinate updates with your collection view or perform custom UI changes.
-
-
-### 6. Dismiss API Signature
-
-``` swift
-func dismiss(
-    to indexPath: IndexPath? = nil,
-    animated: Bool = true
-)
-```
-If indexPath is nil, the view will try to use the original indexPath used at the time of presentation.
-If you want the view to dismiss to a different indexPath, just provide it in the to parameter.
-
-Example:
-``` swift
-// Dismiss to a different cell than the one originally presented from
-self.wisp.dismiss(to: IndexPath(item: 5, section: 0), animated: true)
-```
 
 ### ✅ That’s it!
 - Familiar API, just like UICollectionView
