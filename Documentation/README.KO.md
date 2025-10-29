@@ -152,8 +152,24 @@ class MyViewController: UIViewController, UICollectionViewDelegate {
 하지만, 개발자가 원하는 시점에 명시적으로 dismiss를 하고 싶다면, 다음과 같이 public API를 호출할 수 있습니다:
 
 ``` swift
+func dismiss(
+    to indexPath: IndexPath? = nil,
+    animated: Bool = true
+)
+```
+
+``` swift
 // present된 뷰컨트롤러 내부에서 스스로 dismiss하는 경우
-self.wisp.dismiss(to: IndexPath(item: 0, section: 0), animated: true)
+self.wisp.dismiss(animated: true)
+```
+
+indexPath가 nil인 경우, 처음 present될 때 사용한 원래 indexPath로 wisp가 dismiss를 시도합니다.
+dismiss 시점에 다른 indexPath로 되돌아가야 한다면, to 매개변수에 원하는 indexPath를 넣어주면 됩니다.
+
+예시:
+``` swift
+// 처음 present된 셀과는 다른 셀로 dismiss하기
+self.wisp.dismiss(to: IndexPath(item: 5, section: 0), animated: true)
 ```
 
 ### 5. Delegate 사용하기
@@ -197,22 +213,6 @@ Wisp로 present된 뷰 컨트롤러가 드래그, 탭 또는 코드로 dismiss�
 
 이 delegate를 이용하면 collection view의 상태를 동기화하거나,
 복원 시점에 맞춰 커스텀 UI 변경을 수행할 수 있습니다.
-
-### 6. Dismiss 함수 시그니처
-``` swift
-func dismiss(
-    to indexPath: IndexPath? = nil,
-    animated: Bool = true
-)
-```
-indexPath가 nil인 경우, 처음 present될 때 사용한 원래 indexPath로 wisp가 dismiss를 시도합니다.
-dismiss 시점에 다른 indexPath로 되돌아가야 한다면, to 매개변수에 원하는 indexPath를 넣어주면 됩니다.
-
-예시:
-``` swift
-// 처음 present된 셀과는 다른 셀로 dismiss하기
-self.wisp.dismiss(to: IndexPath(item: 5, section: 0), animated: true)
-```
 
 ### ✅ 끝!
 - UICollectionViewCompositional 코드를 거의 그대로 사용할 수 있습니다.
