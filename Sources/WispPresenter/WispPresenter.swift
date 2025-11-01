@@ -8,11 +8,11 @@
 import UIKit
 
 /// Delegate for Wisp lifecycle events
-public protocol WispPresenterDelegate: AnyObject {
+@objc public protocol WispPresenterDelegate: AnyObject {
     /// Called right before a restoring animation starts
-    func wispWillRestore()
+    @objc optional func wispWillRestore()
     /// Called right after restoring finished
-    func wispDidRestore()
+    @objc optional func wispDidRestore()
 }
 
 public final class WispPresenter {
@@ -175,10 +175,10 @@ internal extension WispPresenter {
                   Falling back to default dismiss transition.
                   """)
             context.collectionView?.makeSelectedCellVisible(indexPath: context.sourceIndexPath)
-            delegate?.wispWillRestore()
+            delegate?.wispWillRestore?()
             viewControllerToDismiss.dismiss(animated: true) { [weak self] in
                 guard let self else { return }
-                self.delegate?.wispDidRestore()
+                self.delegate?.wispDidRestore?()
             }
             return
         }
@@ -223,14 +223,14 @@ private extension WispPresenter {
               let targetCell = collectionView.cellForItem(at: destinationIndexPath)
         else {
             // Apply fallback dismissing animation when target collectionView or cell is missing
-            delegate?.wispWillRestore()
+            delegate?.wispWillRestore?()
             viewControllerToDismiss.dismiss(animated: true) { [weak self] in
-                self?.delegate?.wispDidRestore()
+                self?.delegate?.wispDidRestore?()
             }
             return
         }
         
-        delegate?.wispWillRestore()
+        delegate?.wispWillRestore?()
         state = .restoring
         restorationHandler.restore(
             startFrame: cardContainerView.frame,

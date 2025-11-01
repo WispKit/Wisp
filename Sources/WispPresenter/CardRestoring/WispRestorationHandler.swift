@@ -161,7 +161,7 @@ internal final class WispRestorationHandler {
             if let cancellable {
                 self.cancellables.remove(cancellable)
             }
-            self.delegate?.wispDidRestore()
+            self.delegate?.wispDidRestore?()
             completion?()
         }
         
