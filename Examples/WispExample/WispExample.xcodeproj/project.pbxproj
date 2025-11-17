@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		4E5C50EF2ECAE61100A7ECE6 /* Wisp in Frameworks */ = {isa = PBXBuildFile; productRef = 4E5C50EE2ECAE61100A7ECE6 /* Wisp */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		4E5C50B92ECAE03200A7ECE6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -65,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E5C50EF2ECAE61100A7ECE6 /* Wisp in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,6 +130,7 @@
 			);
 			name = WispExample;
 			packageProductDependencies = (
+				4E5C50EE2ECAE61100A7ECE6 /* Wisp */,
 			);
 			productName = WispExample;
 			productReference = 4E5C50A22ECAE03000A7ECE6 /* WispExample.app */;
@@ -208,6 +214,9 @@
 			);
 			mainGroup = 4E5C50992ECAE03000A7ECE6;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				4E5C50ED2ECAE61100A7ECE6 /* XCLocalSwiftPackageReference "../../../Wisp" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4E5C50A32ECAE03000A7ECE6 /* Products */;
 			projectDirPath = "";
@@ -593,6 +602,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		4E5C50ED2ECAE61100A7ECE6 /* XCLocalSwiftPackageReference "../../../Wisp" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../../Wisp;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4E5C50EE2ECAE61100A7ECE6 /* Wisp */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Wisp;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4E5C509A2ECAE03000A7ECE6 /* Project object */;
 }
