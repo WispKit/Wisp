@@ -5,7 +5,7 @@
 //  Created by 김민성 on 8/9/25.
 //
 
-public struct GestureDirection: OptionSet {
+public struct GestureDirection: OptionSet, Sendable {
     
     public let rawValue: Int
     

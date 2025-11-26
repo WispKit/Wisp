@@ -7,6 +7,7 @@
 
 import UIKit
 
+@MainActor
 internal protocol CustomCompositionalLayoutDelegate: AnyObject {
     
     func layoutInvalidated()

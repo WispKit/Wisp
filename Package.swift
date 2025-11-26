@@ -21,5 +21,5 @@ let package = Package(
             dependencies: ["Wisp"]
         ),
     ],
-    swiftLanguageModes: [.v5]
+    swiftLanguageModes: [.v5, .v6]
 )

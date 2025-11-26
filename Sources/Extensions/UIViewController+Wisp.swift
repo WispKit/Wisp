@@ -7,7 +7,7 @@
 
 import UIKit
 
-private var wispKey: UInt8 = 0
+@MainActor private var wispKey: UInt8 = 0
 
 public extension UIViewController {
     

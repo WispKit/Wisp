@@ -7,11 +7,11 @@
 
 import UIKit
 
-public struct WispConfiguration {
+public struct WispConfiguration: Sendable {
     
-    public struct AnimationOptions {
+    public struct AnimationOptions: Sendable {
         // Raw value means the duration of presenting animation.
-        public enum Speed: Double {
+        public enum Speed: Double, Sendable {
             case slow = 0.8
             case normal = 0.6
             case fast = 0.4
@@ -22,14 +22,14 @@ public struct WispConfiguration {
         public init() {}
     }
     
-    public struct GestureOptions {
+    public struct GestureOptions: Sendable {
         public var allowedDirections: GestureDirection = [.horizontal, .down]
         public var dismissByTap: Bool = true
         
         public init() {}
     }
     
-    public struct LayoutOptions {
+    public struct LayoutOptions: Sendable {
         public var presentedAreaInset: UIEdgeInsets = .zero
         public var initialCornerRadius: CGFloat = 0
         public var finalCornerRadius: CGFloat = 20
