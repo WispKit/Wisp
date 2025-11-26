@@ -8,7 +8,7 @@
 import Combine
 import UIKit
 
-internal final class WispRestorationHandler {
+@MainActor internal final class WispRestorationHandler {
     
     private weak var delegate: WispPresenterDelegate?
     

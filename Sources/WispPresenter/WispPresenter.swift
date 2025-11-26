@@ -15,7 +15,7 @@ import UIKit
     @objc optional func wispDidRestore()
 }
 
-public final class WispPresenter {
+@MainActor public final class WispPresenter {
     
     internal enum State {
         case idle
@@ -161,7 +161,7 @@ public extension WispPresenter {
 
 internal extension WispPresenter {
     
-    func dismissPresentedVC(withVelocity initialVelocity: CGPoint = .zero) {
+    @MainActor func dismissPresentedVC(withVelocity initialVelocity: CGPoint = .zero) {
         guard let context,
               let viewControllerToDismiss = context.viewControllerToPresent
         else {
@@ -196,7 +196,7 @@ internal extension WispPresenter {
         
         Task {
             self.state = .dismissing
-            await startWispDismissing(with: initialVelocity)
+            startWispDismissing(with: initialVelocity)
         }
     }
     
