@@ -1,0 +1,641 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4E5C50EF2ECAE61100A7ECE6 /* Wisp in Frameworks */ = {isa = PBXBuildFile; productRef = 4E5C50EE2ECAE61100A7ECE6 /* Wisp */; };
+		4E69DFA22EE9131900A05E94 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4E69DFA12EE9131900A05E94 /* SnapKit */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4E5C50B92ECAE03200A7ECE6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4E5C509A2ECAE03000A7ECE6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4E5C50A12ECAE03000A7ECE6;
+			remoteInfo = WispExample;
+		};
+		4E5C50C32ECAE03200A7ECE6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4E5C509A2ECAE03000A7ECE6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4E5C50A12ECAE03000A7ECE6;
+			remoteInfo = WispExample;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		4E5C50A22ECAE03000A7ECE6 /* WispExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WispExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4E5C50B82ECAE03200A7ECE6 /* WispExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WispExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4E5C50C22ECAE03200A7ECE6 /* WispExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WispExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		4E5C50CA2ECAE03200A7ECE6 /* Exceptions for "WispExample" folder in "WispExample" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 4E5C50A12ECAE03000A7ECE6 /* WispExample */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		4E5C50A42ECAE03000A7ECE6 /* WispExample */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				4E5C50CA2ECAE03200A7ECE6 /* Exceptions for "WispExample" folder in "WispExample" target */,
+			);
+			path = WispExample;
+			sourceTree = "<group>";
+		};
+		4E5C50BB2ECAE03200A7ECE6 /* WispExampleTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = WispExampleTests;
+			sourceTree = "<group>";
+		};
+		4E5C50C52ECAE03200A7ECE6 /* WispExampleUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = WispExampleUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4E5C509F2ECAE03000A7ECE6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4E5C50EF2ECAE61100A7ECE6 /* Wisp in Frameworks */,
+				4E69DFA22EE9131900A05E94 /* SnapKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4E5C50B52ECAE03200A7ECE6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4E5C50BF2ECAE03200A7ECE6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4E5C50992ECAE03000A7ECE6 = {
+			isa = PBXGroup;
+			children = (
+				4E5C50A42ECAE03000A7ECE6 /* WispExample */,
+				4E5C50BB2ECAE03200A7ECE6 /* WispExampleTests */,
+				4E5C50C52ECAE03200A7ECE6 /* WispExampleUITests */,
+				4E5C50A32ECAE03000A7ECE6 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4E5C50A32ECAE03000A7ECE6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4E5C50A22ECAE03000A7ECE6 /* WispExample.app */,
+				4E5C50B82ECAE03200A7ECE6 /* WispExampleTests.xctest */,
+				4E5C50C22ECAE03200A7ECE6 /* WispExampleUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4E5C50A12ECAE03000A7ECE6 /* WispExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4E5C50CB2ECAE03200A7ECE6 /* Build configuration list for PBXNativeTarget "WispExample" */;
+			buildPhases = (
+				4E5C509E2ECAE03000A7ECE6 /* Sources */,
+				4E5C509F2ECAE03000A7ECE6 /* Frameworks */,
+				4E5C50A02ECAE03000A7ECE6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				4E5C50A42ECAE03000A7ECE6 /* WispExample */,
+			);
+			name = WispExample;
+			packageProductDependencies = (
+				4E5C50EE2ECAE61100A7ECE6 /* Wisp */,
+				4E69DFA12EE9131900A05E94 /* SnapKit */,
+			);
+			productName = WispExample;
+			productReference = 4E5C50A22ECAE03000A7ECE6 /* WispExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+		4E5C50B72ECAE03200A7ECE6 /* WispExampleTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4E5C50D02ECAE03200A7ECE6 /* Build configuration list for PBXNativeTarget "WispExampleTests" */;
+			buildPhases = (
+				4E5C50B42ECAE03200A7ECE6 /* Sources */,
+				4E5C50B52ECAE03200A7ECE6 /* Frameworks */,
+				4E5C50B62ECAE03200A7ECE6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4E5C50BA2ECAE03200A7ECE6 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				4E5C50BB2ECAE03200A7ECE6 /* WispExampleTests */,
+			);
+			name = WispExampleTests;
+			packageProductDependencies = (
+			);
+			productName = WispExampleTests;
+			productReference = 4E5C50B82ECAE03200A7ECE6 /* WispExampleTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		4E5C50C12ECAE03200A7ECE6 /* WispExampleUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4E5C50D32ECAE03200A7ECE6 /* Build configuration list for PBXNativeTarget "WispExampleUITests" */;
+			buildPhases = (
+				4E5C50BE2ECAE03200A7ECE6 /* Sources */,
+				4E5C50BF2ECAE03200A7ECE6 /* Frameworks */,
+				4E5C50C02ECAE03200A7ECE6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4E5C50C42ECAE03200A7ECE6 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				4E5C50C52ECAE03200A7ECE6 /* WispExampleUITests */,
+			);
+			name = WispExampleUITests;
+			packageProductDependencies = (
+			);
+			productName = WispExampleUITests;
+			productReference = 4E5C50C22ECAE03200A7ECE6 /* WispExampleUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4E5C509A2ECAE03000A7ECE6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2610;
+				LastUpgradeCheck = 2610;
+				TargetAttributes = {
+					4E5C50A12ECAE03000A7ECE6 = {
+						CreatedOnToolsVersion = 26.1;
+					};
+					4E5C50B72ECAE03200A7ECE6 = {
+						CreatedOnToolsVersion = 26.1;
+						TestTargetID = 4E5C50A12ECAE03000A7ECE6;
+					};
+					4E5C50C12ECAE03200A7ECE6 = {
+						CreatedOnToolsVersion = 26.1;
+						TestTargetID = 4E5C50A12ECAE03000A7ECE6;
+					};
+				};
+			};
+			buildConfigurationList = 4E5C509D2ECAE03000A7ECE6 /* Build configuration list for PBXProject "WispExample" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 4E5C50992ECAE03000A7ECE6;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				4E5C50ED2ECAE61100A7ECE6 /* XCLocalSwiftPackageReference "../../../Wisp" */,
+				4E69DFA02EE9131900A05E94 /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 4E5C50A32ECAE03000A7ECE6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4E5C50A12ECAE03000A7ECE6 /* WispExample */,
+				4E5C50B72ECAE03200A7ECE6 /* WispExampleTests */,
+				4E5C50C12ECAE03200A7ECE6 /* WispExampleUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4E5C50A02ECAE03000A7ECE6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4E5C50B62ECAE03200A7ECE6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4E5C50C02ECAE03200A7ECE6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4E5C509E2ECAE03000A7ECE6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4E5C50B42ECAE03200A7ECE6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4E5C50BE2ECAE03200A7ECE6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4E5C50BA2ECAE03200A7ECE6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4E5C50A12ECAE03000A7ECE6 /* WispExample */;
+			targetProxy = 4E5C50B92ECAE03200A7ECE6 /* PBXContainerItemProxy */;
+		};
+		4E5C50C42ECAE03200A7ECE6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4E5C50A12ECAE03000A7ECE6 /* WispExample */;
+			targetProxy = 4E5C50C32ECAE03200A7ECE6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		4E5C50CC2ECAE03200A7ECE6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 548W892M42;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WispExample/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = WispExample;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wisp.WispExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4E5C50CD2ECAE03200A7ECE6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 548W892M42;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WispExample/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = WispExample;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wisp.WispExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		4E5C50CE2ECAE03200A7ECE6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 548W892M42;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.1;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		4E5C50CF2ECAE03200A7ECE6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 548W892M42;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.1;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4E5C50D12ECAE03200A7ECE6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 548W892M42;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wisp.WispExampleTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WispExample.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WispExample";
+			};
+			name = Debug;
+		};
+		4E5C50D22ECAE03200A7ECE6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 548W892M42;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wisp.WispExampleTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WispExample.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WispExample";
+			};
+			name = Release;
+		};
+		4E5C50D42ECAE03200A7ECE6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 548W892M42;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wisp.WispExampleUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = WispExample;
+			};
+			name = Debug;
+		};
+		4E5C50D52ECAE03200A7ECE6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 548W892M42;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wisp.WispExampleUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = WispExample;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4E5C509D2ECAE03000A7ECE6 /* Build configuration list for PBXProject "WispExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4E5C50CE2ECAE03200A7ECE6 /* Debug */,
+				4E5C50CF2ECAE03200A7ECE6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4E5C50CB2ECAE03200A7ECE6 /* Build configuration list for PBXNativeTarget "WispExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4E5C50CC2ECAE03200A7ECE6 /* Debug */,
+				4E5C50CD2ECAE03200A7ECE6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4E5C50D02ECAE03200A7ECE6 /* Build configuration list for PBXNativeTarget "WispExampleTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4E5C50D12ECAE03200A7ECE6 /* Debug */,
+				4E5C50D22ECAE03200A7ECE6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4E5C50D32ECAE03200A7ECE6 /* Build configuration list for PBXNativeTarget "WispExampleUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4E5C50D42ECAE03200A7ECE6 /* Debug */,
+				4E5C50D52ECAE03200A7ECE6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		4E5C50ED2ECAE61100A7ECE6 /* XCLocalSwiftPackageReference "../../../Wisp" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../../Wisp;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4E69DFA02EE9131900A05E94 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4E5C50EE2ECAE61100A7ECE6 /* Wisp */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Wisp;
+		};
+		4E69DFA12EE9131900A05E94 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4E69DFA02EE9131900A05E94 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 4E5C509A2ECAE03000A7ECE6 /* Project object */;
+}

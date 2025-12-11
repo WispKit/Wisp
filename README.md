@@ -219,6 +219,17 @@ You can use this delegate to coordinate updates with your collection view or per
 - Simple creation of custom or list layouts
 - Smooth presentation with zero hassle
 
+## Example App
+
+This repository includes a fully functional example app, `WispExample`, to demonstrate the features of the Wisp library. You can run it to see live examples of different transition styles and configurations.
+
+### How to Run
+
+1.  Clone the repository to your local machine.
+2.  Open `Wisp.xcworkspace` in Xcode.
+3.  Select the `WispExample` scheme.
+4.  Build and run on your preferred simulator or a physical device.
+
 ## ⚙️ Configuration
 
 WispConfiguration allows you to tweak the animation and layout behavior.
