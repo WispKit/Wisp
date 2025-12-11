@@ -19,7 +19,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = ViewController()
+        
+        let tabBarController = UITabBarController()
+        let viewController = HomeViewController()
+        viewController.tabBarItem = .init(
+            title: "movieList",
+            image: .init(systemName: "movieclapper"),
+            selectedImage: .init(systemName: "movieclapper.fill"),
+        )
+        tabBarController.viewControllers = [viewController]
+        
+        window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
     }
 
