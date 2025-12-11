@@ -218,6 +218,17 @@ Wisp로 present된 뷰 컨트롤러가 드래그, 탭 또는 코드로 dismiss�
 - UICollectionViewCompositional 코드를 거의 그대로 사용할 수 있습니다.
 - UIKit의 커스텀 트랜지션을 별도로 설정할 필요가 없습니다. 이제 번거로움 없이 매끄러운 화면 전환을 구현할 수 있습니다.
 
+## 예제 앱
+
+이 저장소에는 Wisp 라이브러리의 다양한 기능을 보여주는 예제 앱 `WispExample`이 포함되어 있습니다. 앱을 직접 실행하여 다양한 트랜지션 스타일과 설정을 실제로 확인할 수 있습니다.
+
+### 실행 방법
+
+1.  저장소를 로컬 컴퓨터로 복제(Clone)합니다.
+2.  Xcode에서 `Wisp.xcworkspace` 파일을 엽니다.
+3.  `WispExample` 스킴(Scheme)을 선택합니다.
+4.  원하는 시뮬레이터 또는 실제 기기에서 빌드하고 실행합니다.
+
 ## ⚙️ Configuration
 
 만약 애니메이션 속도, 펼쳐질 카드의 크기나 corner radius 등을 변경하고 싶다면 
