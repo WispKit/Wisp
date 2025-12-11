@@ -190,10 +190,15 @@ extension WispPresentationController: UIGestureRecognizerDelegate {
         
         /// blocks `wisp`'s `pan gesture` when tried to pan `first responder`.
         if let firstResponder = findFirstResponder(in: view),
-            firstResponder.isDescendant(of: view),
-            let superview = firstResponder.superview {
+           firstResponder.isDescendant(of: view),
+           let superview = firstResponder.superview {
             let firstResponderConvertedFrame = superview.convert(firstResponder.frame, to: view)
+
             if firstResponderConvertedFrame.contains(gesturePoint) {
+                // If the first responder is a non-editable UITextView, allow the gesture.
+                if let textView = firstResponder as? UITextView, !textView.isEditable {
+                    return true
+                }
                 return false
             }
         }
