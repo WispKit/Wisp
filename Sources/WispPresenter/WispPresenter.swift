@@ -7,7 +7,10 @@
 
 import UIKit
 
-/// Delegate for Wisp lifecycle events
+/// A delegate protocol for receiving Wisp lifecycle events.
+///
+/// Adopt this protocol to be notified of events during the Wisp restoring lifecycle,
+/// such as the start and end of the restoration (dismissal) animation.
 @objc public protocol WispPresenterDelegate: AnyObject {
     /// Called right before a restoring animation starts
     @objc optional func wispWillRestore()
@@ -30,6 +33,9 @@ import UIKit
         case restoring
     }
     
+    /// The delegate object that receives lifecycle events.
+    ///
+    /// The delegate is notified when the restoration animation is about to start and when it has completed.
     public weak var delegate: (any WispPresenterDelegate)?
     private lazy var restorationHandler = WispRestorationHandler(delegate: self.delegate)
     
