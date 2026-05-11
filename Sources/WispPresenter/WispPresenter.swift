@@ -7,7 +7,10 @@
 
 import UIKit
 
-/// Delegate for Wisp lifecycle events
+/// A delegate protocol for receiving Wisp lifecycle events.
+///
+/// Adopt this protocol to be notified of events during the Wisp restoring lifecycle,
+/// such as the start and end of the restoration (dismissal) animation.
 @objc public protocol WispPresenterDelegate: AnyObject {
     /// Called right before a restoring animation starts
     @objc optional func wispWillRestore()
@@ -15,6 +18,11 @@ import UIKit
     @objc optional func wispDidRestore()
 }
 
+/// An object that manages the custom transition and presentation logic for Wisp.
+///
+/// `WispPresenter` handles the presentation and dismissal of view controllers using a card-style transition
+/// originating from a collection view cell. It coordinates the transition animations, gesture handling,
+/// and the restoration of the view controller back to its original cell.
 @MainActor public final class WispPresenter {
     
     internal enum State {
@@ -25,6 +33,9 @@ import UIKit
         case restoring
     }
     
+    /// The delegate object that receives lifecycle events.
+    ///
+    /// The delegate is notified when the restoration animation is about to start and when it has completed.
     public weak var delegate: (any WispPresenterDelegate)?
     private lazy var restorationHandler = WispRestorationHandler(delegate: self.delegate)
     
@@ -47,6 +58,18 @@ import UIKit
 // MARK: - Public Presentation
 public extension WispPresenter {
     
+    /// Presents a view controller using the Wisp transition.
+    ///
+    /// - Parameters:
+    ///   - viewControllerToPresent: The view controller to display over the current view controller.
+    ///   - collectionView: The collection view containing the source cell.
+    ///   - indexPath: The index path of the cell from which the transition originates.
+    ///   - configuration: The configuration object defining the transition's behavior and appearance. Defaults to `.default`.
+    ///
+    /// This method initiates a custom presentation transition where the view controller expands from
+    /// a selected cell in the collection view.
+    ///
+    /// - Important: The collection view must be a subview of the presenting view controller's view.
     @MainActor func present(
         _ viewControllerToPresent: UIViewController,
         collectionView: WispableCollectionView,
@@ -103,6 +126,14 @@ public extension WispPresenter {
 // MARK: - Public Dismissal
 public extension WispPresenter {
     
+    /// Dismisses the presented view controller using the Wisp transition.
+    ///
+    /// This method dismisses the view controller, shrinking it back to the original or a new destination cell.
+    ///
+    /// - Parameters:
+    ///   - indexPath: An optional index path to override the destination cell. If `nil`, the view controller returns to the original source cell.
+    ///   - animated: Pass `true` to animate the transition; otherwise, pass `false`. Defaults to `true`.
+    ///   - autoFallback: If `true`, falls back to the standard UIKit dismissal if the view controller was not presented by Wisp. Defaults to `false`.
     @MainActor
     func dismiss(to indexPath: IndexPath? = nil, animated: Bool = true, autoFallback: Bool = false) {
         guard let hostViewController else {
@@ -140,6 +171,12 @@ public extension WispPresenter {
         }
     }
     
+    /// Updates the destination index path for the dismissal transition.
+    ///
+    /// Use this method to change the cell to which the view controller will return upon dismissal,
+    /// without triggering the dismissal immediately.
+    ///
+    /// - Parameter indexPath: The new destination index path.
     @MainActor
     func setDestinationIndex(to indexPath: IndexPath) {
         guard let hostViewController else {
